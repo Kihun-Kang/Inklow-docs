@@ -1,5 +1,5 @@
 ---
-title: "Set Up a Custom Domain for Your InkLoom Docs Site"
+title: "Set Up a Custom Domain for Your InkLoom Documentation"
 sidebarTitle: "Custom Domain"
 description: "Serve your InkLoom documentation from your own domain like docs.yourcompany.com by adding a CNAME record and connecting it in the dashboard."
 ---
@@ -7,7 +7,7 @@ description: "Serve your InkLoom documentation from your own domain like docs.yo
 By default, every InkLoom project is accessible at a subdomain of `inkloom.dev` (for example, `your-project.inkloom.dev`). On the Pro plan and above, you can replace this with your own branded domain — such as `docs.yourcompany.com` — so your documentation feels like a seamless part of your product's web presence. InkLoom handles SSL certificate provisioning automatically once your domain is connected.
 
 <Note>
-  Custom domains require the **Pro plan** or higher. If you are on the Free plan, upgrade to Pro in **Settings > Billing** before following the steps below. See the [pricing page](https://inkloom.dev/pricing) for a full plan comparison.
+  Custom domains require the **Pro plan** or higher. If you are on the Free plan, upgrade to Pro in **Settings > Billing** before following the steps below. See the [pricing page](https://inkloom.io/pricing) for a full plan comparison.
 </Note>
 
 ## Add a custom domain
@@ -63,7 +63,7 @@ InkLoom recommends using a **subdomain** such as `docs.yourcompany.com` for the 
 Pointing a **root domain** (also called an apex domain, e.g. `yourcompany.com`) to InkLoom is more complex because most DNS providers do not support CNAME records at the apex. If you need to use a root domain, check whether your DNS provider supports ALIAS or ANAME records, which some providers offer as a CNAME-equivalent for apex domains.
 
 <Warning>
-  Avoid placing InkLoom behind a reverse proxy or CDN that rewrites hostnames (such as a Cloudflare proxy with orange-cloud enabled) without first consulting InkLoom's [SSL documentation](https://docs.inkloom.dev/ssl). Proxying incorrectly can interfere with SSL certificate provisioning.
+  Avoid placing InkLoom behind a reverse proxy or CDN that rewrites hostnames (such as a Cloudflare proxy with orange-cloud enabled) without first consulting InkLoom's [SSL documentation](https://docs.inkloom.io/ssl). Proxying incorrectly can interfere with SSL certificate provisioning.
 </Warning>
 
 ## Removing a domain

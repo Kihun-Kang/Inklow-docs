@@ -1,5 +1,5 @@
 ---
-title: "InkLoom CLI Commands Reference and Usage Guide"
+title: "InkLoom CLI Reference: Commands, Flags, and Examples"
 sidebarTitle: "Commands"
 description: "Full reference for every InkLoom CLI command: login, deploy, validate, generate, pages, status, and logout with flags and examples."
 ---
@@ -148,10 +148,9 @@ Last deployment: dep_7f3k9x · 2025-06-01T14:22:00Z
 ---
 
 <Tip>
-  For scripts and CI workflows, set both `INKLOOM_API_KEY` and `INKLOOM_PROJECT_ID` as environment variables. With `INKLOOM_PROJECT_ID` set, you can omit the `<project-id>` argument from commands like `deploy`, `generate`, `pages list`, and `status` — keeping your scripts shorter and easier to maintain.
+  In CI pipelines, authenticate without interactive login by setting the `INKLOOM_API_KEY` environment variable. The CLI picks it up automatically, so your build runners never need to run `inkloom login`.
 
   ```bash
   export INKLOOM_API_KEY=your_api_key_here
-  export INKLOOM_PROJECT_ID=proj_abc
   ```
 </Tip>

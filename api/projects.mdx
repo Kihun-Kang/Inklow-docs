@@ -1,10 +1,10 @@
 ---
-title: "Projects API — Manage Documentation Sites"
+title: "Projects API — List and Create Documentation Sites"
 sidebarTitle: "Projects"
-description: "Create, retrieve, update, and delete documentation projects. Each project maps to a hosted docs site on your InkLoom subdomain."
+description: "Programmatically list and create documentation projects in InkLoom. Each project maps to a hosted docs site on your InkLoom subdomain."
 ---
 
-The Projects API lets you programmatically manage every documentation site in your InkLoom account. A project is the top-level container for your pages, settings, and deployments — it maps directly to a hosted URL like `https://my-project.inkloom.dev`. Use these endpoints to automate site provisioning, keep project metadata in sync with your own systems, or clean up stale environments.
+The Projects API lets you programmatically list and create documentation sites in your InkLoom account. A project is the top-level container for your pages, settings, and deployments — it maps directly to a hosted URL like `https://my-project.inkloom.dev`. Use these endpoints to automate site provisioning or keep project metadata in sync with your own systems.
 
 ---
 
@@ -120,7 +120,7 @@ curl -X POST https://api.inkloom.io/v1/projects \
 </ParamField>
 
 <ParamField body="description" type="string">
-  Optional short description of the project. You can update this at any time via `PATCH /projects/:id`.
+  Optional short description of the project.
 </ParamField>
 
 <ParamField body="visibility" type="string" default="public">
@@ -135,95 +135,4 @@ Returns the newly created project object with HTTP `201 Created`.
   InkLoom provisions a subdomain for your project immediately on creation, but the URL will return a 404 until you publish your first deployment.
 </Note>
 
----
 
-## Get a project
-
-`GET /projects/:id`
-
-Fetch a single project by its ID.
-
-```bash
-curl https://api.inkloom.io/v1/projects/proj_abc123 \
-  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
-```
-
-### Path parameters
-
-<ParamField path="id" type="string" required>
-  The ID of the project to retrieve. For example, `proj_abc123`.
-</ParamField>
-
-### Response
-
-Returns the project object on success, or a `404` error if the ID does not match any project in your account.
-
----
-
-## Update a project
-
-`PATCH /projects/:id`
-
-Update one or more fields on an existing project. Send only the fields you want to change — all other fields remain untouched.
-
-```bash
-curl -X PATCH https://api.inkloom.io/v1/projects/proj_abc123 \
-  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"name": "My Docs v2", "visibility": "private"}'
-```
-
-### Path parameters
-
-<ParamField path="id" type="string" required>
-  The ID of the project to update.
-</ParamField>
-
-### Request body
-
-<ParamField body="name" type="string">
-  New display name for the project.
-</ParamField>
-
-<ParamField body="description" type="string">
-  New description. Pass `null` explicitly to clear an existing description.
-</ParamField>
-
-<ParamField body="visibility" type="string">
-  Updated visibility setting. One of `"public"` or `"private"`.
-</ParamField>
-
-<Note>
-  The `slug` field is immutable after creation. To change a project's subdomain, delete the project and create a new one with the desired slug.
-</Note>
-
-### Response
-
-Returns the full updated project object on success.
-
----
-
-## Delete a project
-
-`DELETE /projects/:id`
-
-Permanently delete a project and all of its associated pages and deployments.
-
-```bash
-curl -X DELETE https://api.inkloom.io/v1/projects/proj_abc123 \
-  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
-```
-
-### Path parameters
-
-<ParamField path="id" type="string" required>
-  The ID of the project to delete.
-</ParamField>
-
-### Response
-
-Returns HTTP `204 No Content` on success with an empty body.
-
-<Warning>
-  Deleting a project is **permanent and irreversible**. All pages, deployments, and the associated subdomain are immediately destroyed. There is no soft-delete or recovery path — make sure you have any content backed up before proceeding.
-</Warning>

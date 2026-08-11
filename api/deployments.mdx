@@ -1,10 +1,10 @@
 ---
 title: "Deployments API — Publish and Monitor Doc Releases"
 sidebarTitle: "Deployments"
-description: "Trigger, list, and track deployments of your documentation projects. Monitor build status and poll for completion in production and preview environments."
+description: "Trigger and track deployments of your InkLoom documentation projects. Monitor build status and poll for completion in production and preview environments."
 ---
 
-The Deployments API lets you publish your documentation and track the progress of every release. When you trigger a deployment, InkLoom builds your pages from saved MDX content and pushes them to your hosted site. Each deployment moves through a lifecycle — from `pending` through `building` and `deploying`, before reaching a terminal state of `live` or `failed`. Use the status endpoint to poll for completion and integrate deployments into your CI/CD pipeline.
+The Deployments API lets you publish your documentation and check the progress of any release. When you trigger a deployment, InkLoom builds your pages from saved MDX content and pushes them to your hosted site. Each deployment moves through a lifecycle — from `pending` through `building` and `deploying`, before reaching a terminal state of `live` or `failed`. Use the status endpoint to poll for completion and integrate deployments into your CI/CD pipeline.
 
 ---
 
@@ -105,75 +105,20 @@ Returns the new deployment object with HTTP `201 Created`. The initial `status` 
 
 ---
 
-## List deployments
-
-`GET /projects/:id/deployments`
-
-Retrieve a paginated list of all deployments for a project, ordered by `created_at` descending.
-
-```bash
-curl https://api.inkloom.io/v1/projects/proj_abc123/deployments \
-  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
-```
-
-### Path parameters
-
-<ParamField path="id" type="string" required>
-  The ID of the project whose deployments you want to list.
-</ParamField>
-
-### Response
-
-```json
-{
-  "data": [
-    {
-      "id": "dep_7f3k9x",
-      "project_id": "proj_abc123",
-      "status": "live",
-      "environment": "production",
-      "url": "https://my-docs.inkloom.dev",
-      "created_at": "2025-06-01T14:22:00Z",
-      "completed_at": "2025-06-01T14:23:47Z"
-    }
-  ],
-  "next_cursor": null,
-  "has_more": false
-}
-```
-
-<ResponseField name="data" type="Deployment[]">
-  Array of deployment objects for the current page.
-</ResponseField>
-
-<ResponseField name="next_cursor" type="string | null">
-  Opaque cursor for the next page. Pass as the `cursor` query parameter to continue paginating. Returns `null` on the last page.
-</ResponseField>
-
-<ResponseField name="has_more" type="boolean">
-  `true` when more deployments exist beyond the current page.
-</ResponseField>
-
----
-
 ## Get deployment status
 
-`GET /projects/:id/deployments/:depId`
+`GET /deployments/:id`
 
 Fetch a single deployment by ID to check its current status and metadata. Poll this endpoint after triggering a deployment to track it through to completion.
 
 ```bash
-curl https://api.inkloom.io/v1/projects/proj_abc123/deployments/dep_7f3k9x \
+curl https://api.inkloom.io/v1/deployments/dep_7f3k9x \
   -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
 ```
 
 ### Path parameters
 
 <ParamField path="id" type="string" required>
-  The ID of the project that owns the deployment.
-</ParamField>
-
-<ParamField path="depId" type="string" required>
   The ID of the deployment to retrieve. For example, `dep_7f3k9x`.
 </ParamField>
 
@@ -185,18 +130,17 @@ Returns the deployment object with its current `status`. Once the deployment fin
 
 ## Polling for completion
 
-After triggering a deployment, call `GET /projects/:id/deployments/:depId` on a loop until `status` reaches a terminal value (`"live"` or `"failed"`). Typical deployments complete within 30–90 seconds.
+After triggering a deployment, call `GET /deployments/:id` on a loop until `status` reaches a terminal value (`"live"` or `"failed"`). Typical deployments complete within 30–90 seconds.
 
 The following shell script polls every 5 seconds and exits when the deployment settles:
 
 ```bash
 DEP_ID="dep_7f3k9x"
-PROJECT_ID="proj_abc123"
 TOKEN="ik_live_xxxxxxxxxxxx"
 
 while true; do
   RESPONSE=$(curl -s \
-    "https://api.inkloom.io/v1/projects/$PROJECT_ID/deployments/$DEP_ID" \
+    "https://api.inkloom.io/v1/deployments/$DEP_ID" \
     -H "Authorization: Bearer $TOKEN")
 
   STATUS=$(echo "$RESPONSE" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
@@ -217,8 +161,8 @@ done
 Here is the same logic in Node.js for use in a CI script or deployment pipeline:
 
 ```javascript
-async function waitForDeployment(projectId, depId, token) {
-  const url = `https://api.inkloom.io/v1/projects/${projectId}/deployments/${depId}`;
+async function waitForDeployment(depId, token) {
+  const url = `https://api.inkloom.io/v1/deployments/${depId}`;
   const headers = { Authorization: `Bearer ${token}` };
 
   while (true) {
@@ -242,7 +186,7 @@ async function waitForDeployment(projectId, depId, token) {
 }
 
 // Usage
-waitForDeployment("proj_abc123", "dep_7f3k9x", "ik_live_xxxxxxxxxxxx");
+waitForDeployment("dep_7f3k9x", "ik_live_xxxxxxxxxxxx");
 ```
 
 <Note>

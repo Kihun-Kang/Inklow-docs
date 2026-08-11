@@ -1,7 +1,7 @@
 ---
-title: "Customize Your InkLoom Docs Theme and Branding"
+title: "Customize Your InkLoom Documentation Theme and Branding"
 sidebarTitle: "Themes"
-description: "Configure brand colors, fonts, logo, favicon, and dark mode for your InkLoom docs site from the Settings > Appearance panel."
+description: "Configure brand colors, typography, logo, and favicon for your InkLoom docs site, with full control over light and dark mode appearance settings."
 ---
 
 InkLoom gives you full control over how your documentation looks so it feels like a natural extension of your product's brand. You can customize colors, typography, your logo, a favicon, and how the site responds to a visitor's preferred color scheme — all without writing a line of CSS.
@@ -19,8 +19,8 @@ InkLoom uses three brand color slots: **primary**, **light**, and **dark**. Thes
 | Slot | Purpose |
 |---|---|
 | `primary` | The main accent color — used for links, active nav items, and buttons. |
-| `light` | A lighter variant used for hover states and subtle backgrounds in dark mode. |
-| `dark` | A darker variant used for text and high-contrast elements in light mode. |
+| `light` | A lighter variant of the primary color — used for hover states and subtle backgrounds in light mode. |
+| `dark` | A darker variant of the primary color — used for high-contrast elements and accents in dark mode. |
 
 Set your colors using six-digit hex values. In `docs.json`, they live under the `colors` key:
 
@@ -28,8 +28,8 @@ Set your colors using six-digit hex values. In `docs.json`, they live under the 
 {
   "colors": {
     "primary": "#1be49c",
-    "light": "#0c8c5c",
-    "dark": "#0c0c0c"
+    "light": "#a8f5d8",
+    "dark": "#0c8c5c"
   }
 }
 ```

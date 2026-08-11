@@ -1,10 +1,10 @@
 ---
 title: "Pages API — Create and Manage Documentation Pages"
 sidebarTitle: "Pages"
-description: "Add, retrieve, update, and delete MDX pages within a project. Pages are the individual content documents that make up your documentation site."
+description: "List and create MDX pages within an InkLoom project. Pages are the individual content documents that make up your documentation site."
 ---
 
-The Pages API gives you full programmatic control over the content inside any InkLoom project. Each page stores its content as MDX, so you can embed components, callouts, and interactive elements alongside prose. Use these endpoints to bulk-import documentation, integrate your CMS, or wire up a content pipeline that pushes updates directly from your codebase.
+The Pages API gives you programmatic access to list and create content inside any InkLoom project. Each page stores its content as MDX, so you can embed components, callouts, and interactive elements alongside prose. Use these endpoints to bulk-import documentation, integrate your CMS, or wire up a content pipeline that pushes new pages directly from your codebase.
 
 ---
 
@@ -27,7 +27,7 @@ The Pages API gives you full programmatic control over the content inside any In
 </ResponseField>
 
 <ResponseField name="content" type="string">
-  The full MDX source of the page. This field is included when fetching a single page (`GET /projects/:id/pages/:pageId`) but **omitted** from list responses to keep payloads small.
+  The full MDX source of the page. This field is included in the response when creating a page (`POST /projects/:id/pages`) but **omitted** from list responses to keep payloads small.
 </ResponseField>
 
 <ResponseField name="created_at" type="string">
@@ -44,7 +44,7 @@ The Pages API gives you full programmatic control over the content inside any In
 
 `GET /projects/:id/pages`
 
-Retrieve all pages belonging to a project. List responses omit the `content` field for efficiency — use the [Get a page](#get-a-page) endpoint to fetch full MDX content for a specific page.
+Retrieve all pages belonging to a project. List responses omit the `content` field for efficiency — the full MDX source is returned when you create a page.
 
 ```bash
 curl https://api.inkloom.io/v1/projects/proj_abc123/pages \
@@ -77,7 +77,7 @@ curl https://api.inkloom.io/v1/projects/proj_abc123/pages \
 ```
 
 <ResponseField name="data" type="Page[]">
-  Array of page objects. The `content` field is excluded from each item; fetch individual pages to retrieve their full MDX source.
+  Array of page objects. The `content` field is excluded from each item to keep list payloads small.
 </ResponseField>
 
 <ResponseField name="next_cursor" type="string | null">
@@ -135,123 +135,4 @@ Returns the newly created page object (including `content`) with HTTP `201 Creat
   Writing a frontmatter block at the top of your `content` (e.g., `title`, `description`) is optional — InkLoom uses the top-level `title` field by default, but frontmatter values take precedence when present.
 </Tip>
 
----
 
-## Get a page
-
-`GET /projects/:id/pages/:pageId`
-
-Fetch a single page by ID, including its full MDX `content`. Use this endpoint when you need to read or display the raw source of a specific page.
-
-```bash
-curl https://api.inkloom.io/v1/projects/proj_abc123/pages/page_xyz789 \
-  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
-```
-
-### Path parameters
-
-<ParamField path="id" type="string" required>
-  The ID of the project the page belongs to.
-</ParamField>
-
-<ParamField path="pageId" type="string" required>
-  The ID of the page to retrieve. For example, `page_xyz789`.
-</ParamField>
-
-### Response
-
-Returns the full page object, including the `content` field containing the MDX source.
-
-```json
-{
-  "id": "page_xyz789",
-  "project_id": "proj_abc123",
-  "title": "Authentication",
-  "slug": "authentication",
-  "content": "---\ntitle: Authentication\n---\n\nContent here.",
-  "created_at": "2025-01-15T10:00:00Z",
-  "updated_at": "2025-06-01T14:22:00Z"
-}
-```
-
-<Note>
-  The `content` field is only returned by this single-page endpoint. Responses from `GET /projects/:id/pages` omit `content` for performance. Always use this endpoint when you need to read or diff MDX source.
-</Note>
-
----
-
-## Update a page
-
-`PATCH /projects/:id/pages/:pageId`
-
-Update the title, slug, or content of an existing page. Send only the fields you want to change.
-
-```bash
-curl -X PATCH https://api.inkloom.io/v1/projects/proj_abc123/pages/page_xyz789 \
-  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"title": "Authentication & Authorization", "content": "# Auth\n\nUpdated content."}'
-```
-
-### Path parameters
-
-<ParamField path="id" type="string" required>
-  The ID of the project that owns the page.
-</ParamField>
-
-<ParamField path="pageId" type="string" required>
-  The ID of the page to update.
-</ParamField>
-
-### Request body
-
-<ParamField body="title" type="string">
-  New title for the page.
-</ParamField>
-
-<ParamField body="slug" type="string">
-  New URL slug for the page. Changing the slug will alter the page's public URL after your next deployment — consider adding a redirect if the page is indexed or linked elsewhere.
-</ParamField>
-
-<ParamField body="content" type="string">
-  Replacement MDX content. This fully overwrites the existing content; there is no patch-merge for the content body. InkLoom validates the updated MDX and returns a `422` if it is invalid.
-</ParamField>
-
-### Response
-
-Returns the full updated page object, including the new `content`, on success.
-
-<Warning>
-  Updating `content` is a full replacement, not an append or diff. If you need to make incremental edits, fetch the current content first with `GET /projects/:id/pages/:pageId`, modify it locally, then send the complete updated string.
-</Warning>
-
----
-
-## Delete a page
-
-`DELETE /projects/:id/pages/:pageId`
-
-Permanently remove a page from a project. The page is deleted immediately and will not appear in your next deployment.
-
-```bash
-curl -X DELETE https://api.inkloom.io/v1/projects/proj_abc123/pages/page_xyz789 \
-  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
-```
-
-### Path parameters
-
-<ParamField path="id" type="string" required>
-  The ID of the project that owns the page.
-</ParamField>
-
-<ParamField path="pageId" type="string" required>
-  The ID of the page to delete.
-</ParamField>
-
-### Response
-
-Returns HTTP `204 No Content` with an empty body on success.
-
-<Warning>
-  Page deletion is **immediate and permanent**. The content cannot be recovered after deletion. If you need to temporarily hide a page, consider updating its `slug` to an unlisted path or setting its visibility via a frontmatter flag instead.
-</Warning>
