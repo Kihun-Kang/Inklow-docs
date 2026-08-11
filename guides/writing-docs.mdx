@@ -1,0 +1,133 @@
+---
+title: "Writing Documentation Pages in InkLoom"
+sidebarTitle: "Writing Docs"
+description: "Learn how to create and structure documentation pages in InkLoom using the visual block editor or MDX files in GitHub."
+---
+
+InkLoom gives you two flexible ways to write documentation: a drag-and-drop block editor in the dashboard for a visual, no-code experience, and MDX files in GitHub for developers who prefer working in code. Both approaches produce the same result — polished, interactive documentation pages that your readers will love.
+
+## Choosing your editing mode
+
+Pick the editing mode that fits your workflow. You can mix and match — some pages can live in the block editor while others are managed as MDX files in your repository.
+
+<Tabs>
+  <Tab title="Block Editor">
+    The block editor lets you build pages visually without touching any markup.
+
+    1. Open the [InkLoom dashboard](https://app.inkloom.dev) and select your project.
+    2. In the left sidebar, click **+ New Page**.
+    3. Give your page a title and choose its location in the navigation.
+    4. Click **Edit** to open the block editor.
+    5. Use the **+** button between blocks to insert new content — headings, paragraphs, code blocks, callouts, and more.
+    6. Drag the handle on the left side of any block to reorder it.
+    7. Click **Publish** in the top-right corner when your page is ready.
+  </Tab>
+  <Tab title="MDX on GitHub">
+    Store your docs as `.mdx` files in a GitHub repository and let InkLoom sync them automatically.
+
+    1. Connect your GitHub repository in **Settings > Integrations > GitHub**.
+    2. Create a new file in your repo, for example `guides/getting-started.mdx`.
+    3. Add frontmatter at the top of the file (see the **Page structure** section below).
+    4. Write your content using standard Markdown and InkLoom components.
+    5. Commit and push your changes to the default branch.
+    6. InkLoom detects the push and updates your live documentation within seconds.
+
+    You can also automate deployments using the InkLoom GitHub Action:
+
+    ```yaml title=".github/workflows/inkloom.yml"
+    name: Update Documentation
+    on: push
+    jobs:
+      docs:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - uses: inkloom/docs-action@v1
+            with:
+              api-key: ${{ secrets.INKLOOM_API_KEY }}
+              project-id: ${{ secrets.INKLOOM_PROJECT_ID }}
+    ```
+  </Tab>
+</Tabs>
+
+## Page structure
+
+Every InkLoom page begins with a frontmatter block — a short YAML section at the top of the file enclosed by `---` delimiters. Frontmatter tells InkLoom how to display and index your page.
+
+The three required fields are:
+
+| Field | Purpose | Guidelines |
+|---|---|---|
+| `title` | The page title shown in browser tabs and search results | 50–60 characters, SEO-friendly |
+| `sidebarTitle` | The shorter label shown in the sidebar navigation | 1–3 words, Title Case |
+| `description` | A summary shown in search snippets and social previews | 130–155 characters |
+
+Here is a complete example of a well-structured MDX page:
+
+```mdx title="guides/getting-started.mdx"
+---
+title: "Getting Started with InkLoom Documentation"
+sidebarTitle: "Getting Started"
+description: "Set up your first InkLoom project, connect GitHub, and publish beautiful documentation in under ten minutes."
+---
+
+Write your opening paragraph here. Introduce the topic before using
+any components or code blocks.
+
+## First section heading
+
+Your content continues here...
+```
+
+<Warning>
+Always include all three frontmatter fields. Pages missing `title` or `description` will not rank well in search engines and may display incorrectly in the InkLoom navigation.
+</Warning>
+
+## Adding callouts and tips
+
+Callouts draw your reader's attention to important information. InkLoom supports three callout types — `<Note>`, `<Tip>`, and `<Warning>` — each rendered with a distinct color and icon.
+
+Use a `<Note>` for supplementary information the reader should be aware of:
+
+```mdx
+<Note>
+  InkLoom automatically saves your work every 30 seconds in the block editor.
+</Note>
+```
+
+Use a `<Tip>` for helpful suggestions or best practices:
+
+```mdx
+<Tip>
+  Name your pages with action-oriented titles like "Setting Up Authentication"
+  rather than "Authentication" to improve clarity and SEO.
+</Tip>
+```
+
+Use a `<Warning>` for anything that could cause data loss, broken links, or unexpected behavior:
+
+```mdx
+<Warning>
+  Deleting a page also removes all its child pages. This action cannot be undone.
+</Warning>
+```
+
+## Code examples
+
+Wrap code in triple backticks and always specify a language tag so InkLoom applies the correct syntax highlighting. Add an optional `title` attribute to label the file or context.
+
+````mdx
+```typescript title="src/client.ts"
+import { InkLoomClient } from "@inkloom/sdk";
+
+const client = new InkLoomClient({
+  apiKey: process.env.INKLOOM_API_KEY,
+});
+```
+````
+
+InkLoom supports syntax highlighting for over 100 languages including `typescript`, `python`, `bash`, `yaml`, `json`, `sql`, and more. Readers can copy any code block with a single click.
+
+<Tip>
+  If your team includes non-technical writers or designers, the block editor is the fastest way for them to contribute. They can insert code blocks, callouts, and cards without knowing any MDX syntax — everything is a point-and-click experience in the InkLoom dashboard.
+</Tip>

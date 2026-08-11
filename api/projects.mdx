@@ -1,0 +1,229 @@
+---
+title: "Projects API — Manage Documentation Sites"
+sidebarTitle: "Projects"
+description: "Create, retrieve, update, and delete documentation projects. Each project maps to a hosted docs site on your InkLoom subdomain."
+---
+
+The Projects API lets you programmatically manage every documentation site in your InkLoom account. A project is the top-level container for your pages, settings, and deployments — it maps directly to a hosted URL like `https://my-project.inkloom.dev`. Use these endpoints to automate site provisioning, keep project metadata in sync with your own systems, or clean up stale environments.
+
+---
+
+## The project object
+
+Every endpoint that returns a project uses the following shape.
+
+<ResponseField name="id" type="string">
+  Unique identifier for the project, prefixed with `proj_`. For example, `proj_abc123`.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Human-readable display name shown in the InkLoom dashboard.
+</ResponseField>
+
+<ResponseField name="slug" type="string">
+  URL-safe identifier that determines your docs subdomain. For example, a slug of `my-docs` produces `https://my-docs.inkloom.dev`.
+</ResponseField>
+
+<ResponseField name="description" type="string | null">
+  Optional description of the project. Returns `null` when not set.
+</ResponseField>
+
+<ResponseField name="visibility" type="string">
+  Controls public access. One of `"public"` or `"private"`.
+</ResponseField>
+
+<ResponseField name="url" type="string">
+  The fully-qualified live URL where your docs are hosted.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  ISO 8601 timestamp recording when the project was created.
+</ResponseField>
+
+<ResponseField name="updated_at" type="string">
+  ISO 8601 timestamp of the most recent update to any project field.
+</ResponseField>
+
+---
+
+## List projects
+
+`GET /projects`
+
+Retrieve a paginated list of all projects in your account. Results are ordered by `created_at` descending — most recent first.
+
+```bash
+curl https://api.inkloom.io/v1/projects \
+  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
+```
+
+### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "proj_abc123",
+      "name": "My Docs",
+      "slug": "my-docs",
+      "description": "API documentation for My Product",
+      "visibility": "public",
+      "url": "https://my-docs.inkloom.dev",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-06-01T14:22:00Z"
+    }
+  ],
+  "next_cursor": null,
+  "has_more": false
+}
+```
+
+<ResponseField name="data" type="Project[]">
+  Array of project objects for the current page.
+</ResponseField>
+
+<ResponseField name="next_cursor" type="string | null">
+  Opaque cursor value. Pass this as the `cursor` query parameter to fetch the next page. Returns `null` when you have reached the last page.
+</ResponseField>
+
+<ResponseField name="has_more" type="boolean">
+  `true` when additional pages of results exist beyond the current response.
+</ResponseField>
+
+<Tip>
+  To paginate through all projects, keep requesting `GET /projects?cursor={next_cursor}` until `has_more` is `false`.
+</Tip>
+
+---
+
+## Create a project
+
+`POST /projects`
+
+Create a new documentation project. The `slug` you choose must be unique across all InkLoom projects and becomes a permanent part of your docs URL — choose it carefully.
+
+```bash
+curl -X POST https://api.inkloom.io/v1/projects \
+  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Docs", "slug": "my-docs", "visibility": "public"}'
+```
+
+### Request body
+
+<ParamField body="name" type="string" required>
+  Display name for the project. Shown in the dashboard and used as the default browser tab title.
+</ParamField>
+
+<ParamField body="slug" type="string" required>
+  URL-safe identifier for the project subdomain. Must be lowercase, use only letters, numbers, and hyphens, and be globally unique. For example, `my-docs` → `https://my-docs.inkloom.dev`.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Optional short description of the project. You can update this at any time via `PATCH /projects/:id`.
+</ParamField>
+
+<ParamField body="visibility" type="string" default="public">
+  Access control for the hosted site. Pass `"public"` to allow anyone to view the docs, or `"private"` to restrict access to authenticated users. Defaults to `"public"`.
+</ParamField>
+
+### Response
+
+Returns the newly created project object with HTTP `201 Created`.
+
+<Note>
+  InkLoom provisions a subdomain for your project immediately on creation, but the URL will return a 404 until you publish your first deployment.
+</Note>
+
+---
+
+## Get a project
+
+`GET /projects/:id`
+
+Fetch a single project by its ID.
+
+```bash
+curl https://api.inkloom.io/v1/projects/proj_abc123 \
+  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
+```
+
+### Path parameters
+
+<ParamField path="id" type="string" required>
+  The ID of the project to retrieve. For example, `proj_abc123`.
+</ParamField>
+
+### Response
+
+Returns the project object on success, or a `404` error if the ID does not match any project in your account.
+
+---
+
+## Update a project
+
+`PATCH /projects/:id`
+
+Update one or more fields on an existing project. Send only the fields you want to change — all other fields remain untouched.
+
+```bash
+curl -X PATCH https://api.inkloom.io/v1/projects/proj_abc123 \
+  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Docs v2", "visibility": "private"}'
+```
+
+### Path parameters
+
+<ParamField path="id" type="string" required>
+  The ID of the project to update.
+</ParamField>
+
+### Request body
+
+<ParamField body="name" type="string">
+  New display name for the project.
+</ParamField>
+
+<ParamField body="description" type="string">
+  New description. Pass `null` explicitly to clear an existing description.
+</ParamField>
+
+<ParamField body="visibility" type="string">
+  Updated visibility setting. One of `"public"` or `"private"`.
+</ParamField>
+
+<Note>
+  The `slug` field is immutable after creation. To change a project's subdomain, delete the project and create a new one with the desired slug.
+</Note>
+
+### Response
+
+Returns the full updated project object on success.
+
+---
+
+## Delete a project
+
+`DELETE /projects/:id`
+
+Permanently delete a project and all of its associated pages and deployments.
+
+```bash
+curl -X DELETE https://api.inkloom.io/v1/projects/proj_abc123 \
+  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
+```
+
+### Path parameters
+
+<ParamField path="id" type="string" required>
+  The ID of the project to delete.
+</ParamField>
+
+### Response
+
+Returns HTTP `204 No Content` on success with an empty body.
+
+<Warning>
+  Deleting a project is **permanent and irreversible**. All pages, deployments, and the associated subdomain are immediately destroyed. There is no soft-delete or recovery path — make sure you have any content backed up before proceeding.
+</Warning>

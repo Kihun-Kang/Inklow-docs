@@ -1,0 +1,116 @@
+---
+title: "Configure Docs Navigation Structure in InkLoom"
+sidebarTitle: "Navigation"
+description: "Define tabs, groups, and pages in your InkLoom docs.json to build a clear, hierarchical navigation structure for your documentation site."
+---
+
+Navigation in InkLoom is driven by your project's `docs.json` configuration file. This file defines the tabs, groups, and individual pages that make up your sidebar and top navigation, giving you precise control over how readers move through your documentation.
+
+## Navigation Structure
+
+InkLoom navigation follows a three-level hierarchy:
+
+1. **Tabs** — Top-level navigation items displayed in the header bar. Use tabs to separate major sections of your docs, such as a user guide, an API reference, and a changelog.
+2. **Groups** — Named sections within a tab, rendered as collapsible headings in the sidebar. Groups help readers scan for the right topic without scrolling through a flat list.
+3. **Pages** — Individual MDX files listed inside a group. Each entry is a path to a file, relative to your project root and without the `.mdx` extension.
+
+Here is a complete example showing two tabs, each with one group and two pages:
+
+```json
+{
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart"]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Endpoints",
+            "pages": ["api/users", "api/projects"]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+You can nest groups inside other groups to create deeper hierarchies for large documentation sites. Simply add a `pages` entry that is itself a group object instead of a string path.
+
+<Note>
+  Page slugs in the `pages` array must match the file path exactly, including subdirectory names and letter casing. InkLoom's file system is case-sensitive. A slug of `api/Users` will not resolve to `api/users.mdx`.
+</Note>
+
+## Editing Navigation in the Dashboard
+
+If you prefer a visual approach, InkLoom includes a drag-and-drop navigation editor in the dashboard. Any changes you make there are automatically written back to your `docs.json`.
+
+<Steps>
+  <Step title="Open the Navigation editor">
+    Go to your project in the dashboard and click the **Navigation** tab at the top of the project view.
+  </Step>
+  <Step title="Reorder pages and groups">
+    Drag pages up or down within a group to reorder them. Drag an entire group to move it within the current tab or into a different tab.
+  </Step>
+  <Step title="Rename or delete items">
+    Click the **⋯** menu next to any tab, group, or page to rename or remove it. Removing a page from navigation does not delete the MDX file — it just hides it from the sidebar.
+  </Step>
+  <Step title="Save your changes">
+    Click **Save navigation**. InkLoom commits the updated `docs.json` to your repository and triggers a new deployment.
+  </Step>
+</Steps>
+
+## Adding a New Page to Navigation
+
+When you create a new MDX file, it does not appear in the sidebar automatically. You must register it in the navigation config.
+
+<Tabs>
+  <Tab title="Via docs.json">
+    <Steps>
+      <Step title="Create the MDX file">
+        Add your new file to the appropriate directory in your repository, for example `guides/new-feature.mdx`.
+      </Step>
+      <Step title="Add the slug to docs.json">
+        Open `docs.json` and add the file path (without `.mdx`) to the `pages` array of the relevant group:
+
+        ```json
+        {
+          "group": "Guides",
+          "pages": ["guides/introduction", "guides/new-feature"]
+        }
+        ```
+      </Step>
+      <Step title="Commit and push">
+        Commit the updated `docs.json` along with the new MDX file. InkLoom deploys both changes together.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Via the dashboard">
+    <Steps>
+      <Step title="Create the MDX file">
+        Add your new file to the repository, or create it using InkLoom's built-in page editor.
+      </Step>
+      <Step title="Open the Navigation editor">
+        Go to your project and click the **Navigation** tab.
+      </Step>
+      <Step title="Add the page to a group">
+        Click **+ Add page** inside the target group and enter the file path of your new page. The dashboard validates that the file exists before saving.
+      </Step>
+      <Step title="Save navigation">
+        Click **Save navigation** to apply the change.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+<Tip>
+  Keep your group names short and action-oriented — for example, "Get Started", "Core Concepts", and "API Reference" — so readers can immediately understand what each section contains without having to expand it.
+</Tip>

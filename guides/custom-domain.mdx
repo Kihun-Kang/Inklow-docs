@@ -1,0 +1,77 @@
+---
+title: "Set Up a Custom Domain for Your InkLoom Docs Site"
+sidebarTitle: "Custom Domain"
+description: "Serve your InkLoom documentation from your own domain like docs.yourcompany.com by adding a CNAME record and connecting it in the dashboard."
+---
+
+By default, every InkLoom project is accessible at a subdomain of `inkloom.dev` (for example, `your-project.inkloom.dev`). On the Pro plan and above, you can replace this with your own branded domain — such as `docs.yourcompany.com` — so your documentation feels like a seamless part of your product's web presence. InkLoom handles SSL certificate provisioning automatically once your domain is connected.
+
+<Note>
+  Custom domains require the **Pro plan** or higher. If you are on the Free plan, upgrade to Pro in **Settings > Billing** before following the steps below. See the [pricing page](https://inkloom.dev/pricing) for a full plan comparison.
+</Note>
+
+## Add a custom domain
+
+<Steps>
+  <Step title="Open your domain settings">
+    In the [InkLoom dashboard](https://app.inkloom.dev), select your project and navigate to **Settings > Domains**.
+  </Step>
+  <Step title="Enter your domain">
+    Click **Add Domain** and type the full domain you want to use — for example, `docs.yourcompany.com`. Click **Save**.
+  </Step>
+  <Step title="Create a CNAME record with your DNS provider">
+    Log in to your DNS provider (such as Cloudflare, Route 53, Namecheap, or Google Domains) and add the following CNAME record:
+
+    | Type | Name | Value |
+    |---|---|---|
+    | CNAME | `docs` | `your-project.inkloom.dev` |
+
+    Replace `your-project` with your actual InkLoom project slug, which is shown on the **Settings > Domains** page.
+
+    ```
+    docs.yourcompany.com  CNAME  your-project.inkloom.dev
+    ```
+  </Step>
+  <Step title="Wait for DNS propagation">
+    DNS changes can take anywhere from a few minutes up to 48 hours to propagate globally, though most providers update within 15–30 minutes. You can check propagation status using a tool like [dnschecker.org](https://dnschecker.org).
+  </Step>
+  <Step title="SSL is provisioned automatically">
+    Once InkLoom detects that your CNAME record is pointing correctly, it automatically requests and provisions an SSL certificate for your domain. No manual steps are required on your end.
+  </Step>
+</Steps>
+
+## Verifying your domain
+
+After adding a domain, InkLoom displays its current status on the **Settings > Domains** page. There are three possible statuses:
+
+| Status | Meaning |
+|---|---|
+| **Pending** | InkLoom is waiting to detect the correct CNAME record in DNS. |
+| **Verified** | The CNAME record is confirmed. SSL provisioning is in progress. |
+| **Active** | SSL is provisioned and your domain is fully live. |
+
+If your domain stays in **Pending** for more than an hour, double-check that your CNAME record is saved correctly in your DNS provider's control panel and that there are no conflicting A records on the same hostname.
+
+<Tip>
+  Use your DNS provider's propagation check tool (most providers have one in their dashboard) to confirm the CNAME record is live before contacting support.
+</Tip>
+
+## Using a subdomain vs. root domain
+
+InkLoom recommends using a **subdomain** such as `docs.yourcompany.com` for the simplest and most reliable setup. Subdomains map directly to a CNAME record, which is straightforward to configure with any DNS provider.
+
+Pointing a **root domain** (also called an apex domain, e.g. `yourcompany.com`) to InkLoom is more complex because most DNS providers do not support CNAME records at the apex. If you need to use a root domain, check whether your DNS provider supports ALIAS or ANAME records, which some providers offer as a CNAME-equivalent for apex domains.
+
+<Warning>
+  Avoid placing InkLoom behind a reverse proxy or CDN that rewrites hostnames (such as a Cloudflare proxy with orange-cloud enabled) without first consulting InkLoom's [SSL documentation](https://docs.inkloom.dev/ssl). Proxying incorrectly can interfere with SSL certificate provisioning.
+</Warning>
+
+## Removing a domain
+
+To disconnect a custom domain from your project:
+
+1. Go to **Settings > Domains** in your project dashboard.
+2. Find the domain you want to remove and click **Remove** next to it.
+3. Confirm the removal in the dialog that appears.
+
+After removing a domain, your documentation reverts to its `*.inkloom.dev` subdomain. Remember to delete the CNAME record from your DNS provider as well to avoid any dangling DNS entries.

@@ -1,0 +1,81 @@
+---
+title: "AI Documentation Generation from Your Codebase"
+sidebarTitle: "AI Generation"
+description: "Point InkLoom at your codebase and get comprehensive, up-to-date docs instantly. A GitHub Action keeps everything current on every push."
+---
+
+InkLoom's AI generation engine reads your source code and writes documentation for you. Point it at a repository, and it produces API references, function guides, configuration pages, and more — then keeps them current automatically every time you push new code.
+
+## Generate docs from your codebase
+
+You can trigger a one-time generation run directly from the dashboard whenever you want to bootstrap documentation for a new project or fill gaps in existing pages.
+
+<Steps>
+  <Step title="Open your project">
+    Go to the InkLoom dashboard and select the project you want to generate docs for.
+  </Step>
+  <Step title="Click Generate Docs">
+    Click the **Generate Docs** button in the project overview. InkLoom will prompt you to confirm which repository and branch to analyze.
+  </Step>
+  <Step title="Wait for analysis">
+    InkLoom parses your codebase — reading exports, types, comments, and README files. For most projects this takes between 30 seconds and two minutes depending on repository size.
+  </Step>
+  <Step title="Review the generated pages">
+    When analysis completes, InkLoom presents a list of proposed pages. Review them, deselect any you don't need, and click **Publish Selected** to add them to your project.
+  </Step>
+</Steps>
+
+## Evergreen docs with GitHub Actions
+
+The real power of AI generation comes from running it continuously. The `inkloom/docs-action@v1` GitHub Action triggers on every push, detects what changed, regenerates the affected pages, and opens a pull request for your review.
+
+Add the following workflow file to your repository:
+
+```yaml
+# .github/workflows/inkloom.yml
+name: Update Documentation
+on: push
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: inkloom/docs-action@v1
+        with:
+          api-key: ${{ secrets.INKLOOM_API_KEY }}
+          project-id: ${{ secrets.INKLOOM_PROJECT_ID }}
+```
+
+**Setting up your secrets**: Before the action can run, add two secrets to your GitHub repository under **Settings > Secrets and variables > Actions**:
+
+- `INKLOOM_API_KEY` — your InkLoom API key, found in **Dashboard > Settings > API Keys**.
+- `INKLOOM_PROJECT_ID` — the ID of your InkLoom project, shown in **Dashboard > Settings > General** (format: `proj_xxxxxxx`).
+
+**How the workflow runs end to end**: When you push code, the action checks out your repository and sends it to InkLoom's analysis API. InkLoom identifies what changed, generates or updates the relevant documentation pages, and opens a pull request against your default branch with the new content. Once you merge that PR, InkLoom deploys the updated docs automatically.
+
+## What gets generated
+
+InkLoom's AI targets the documentation types that teams need most:
+
+- **API references** — one page per exported function, class, or module, with parameter tables and return type descriptions.
+- **Function and method docs** — inline JSDoc, Python docstrings, or Go comments are expanded into full prose explanations.
+- **Configuration guides** — environment variables and config file options are documented with types, defaults, and examples.
+- **Overview pages** — your README is transformed into a polished landing page with proper headings and callouts.
+
+<Note>
+  AI generation consumes credits from your plan allowance. **Free plan**: no AI credits. **Pro plan**: 20 credits per month. **Ultimate plan**: 100 credits per month. One generation run on an average-size repository uses approximately one credit.
+</Note>
+
+## Reviewing AI-generated docs
+
+AI-generated content always comes to you as a pull request — InkLoom never publishes directly to your live docs without your approval. This gives you a chance to review every page before it reaches readers.
+
+In the pull request you can:
+
+- Edit any page in the InkLoom block editor before merging.
+- Request a re-generation of a specific page by commenting `/inkloom regenerate` on the PR.
+- Close the PR without merging if the generated content isn't useful — this does not consume additional credits.
+
+<Tip>
+  Assign the AI-generated PR to the engineer who wrote the code being documented. They're best placed to verify correctness and add any context the AI may have missed.
+</Tip>

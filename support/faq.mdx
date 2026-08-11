@@ -1,0 +1,83 @@
+---
+title: "Frequently Asked Questions About InkLoom"
+sidebarTitle: "FAQ"
+description: "Answers to common questions about InkLoom plans, AI credits, custom domains, self-hosting, private docs, migrations, and the GitHub Action integration."
+---
+
+Whether you are evaluating InkLoom for the first time or running into a specific question mid-setup, this page collects the answers our team hears most often. Browse the topics below, and if you do not find what you need, reach out to [support@inkloom.io](mailto:support@inkloom.io).
+
+<Accordion title="What plans does InkLoom offer?">
+  InkLoom offers four plans to fit teams of every size:
+
+  | Plan | Price | Highlights |
+  |---|---|---|
+  | **Free** | $0/month | Unlimited pages, hosted on `*.inkloom.dev`, community support |
+  | **Pro** | $49/month (annual) | Custom domains, GitHub integration, 20 AI credits/month |
+  | **Ultimate** | $159/month (annual) | Real-time collaboration, authenticated docs access, 100 AI credits/month |
+  | **Enterprise** | Custom pricing | SSO/SAML, 99.99% SLA, dedicated support, custom retention |
+
+  All plans include unlimited pages and the core editor. Upgrade or downgrade at any time from **Settings → Billing**.
+</Accordion>
+
+<Accordion title="How many AI credits do I get?">
+  AI credits power InkLoom's AI generation features — automatically writing or updating documentation pages when your code changes.
+
+  - **Free**: 0 AI credits per month (AI features are not available)
+  - **Pro**: 20 AI credits per month
+  - **Ultimate**: 100 AI credits per month
+  - **Enterprise**: Custom credit volume — contact your account manager
+
+  Credits reset on your monthly billing anniversary. Unused credits do not roll over. If you exhaust your credits before the month ends, AI generation will pause until the next reset. You can purchase additional credit packs from **Settings → Billing**.
+</Accordion>
+
+<Accordion title="Can I self-host InkLoom?">
+  Yes. InkLoom is open source and available at [github.com/inkloom-io/inkloom](https://github.com/inkloom-io/inkloom) under the **Apache 2.0 license**. You are free to run it on your own infrastructure, modify the codebase, and contribute improvements back to the project.
+
+  The self-hosted version includes the core editor, navigation, and deployment pipeline. Cloud-only features — such as managed AI credits, the InkLoom CDN, and SLA-backed uptime — are not included in the self-hosted distribution.
+</Accordion>
+
+<Accordion title="Does InkLoom support private or authenticated docs?">
+  Yes. On the **Ultimate plan**, you can restrict your published docs site so that only logged-in users with an explicit invitation can view it. This is useful for internal documentation, early-access programs, or customer-only content.
+
+  To enable authenticated access, go to **Settings → Security → Enable Authentication**. Any visitor who is not signed in will be redirected to a login prompt.
+
+  For team-wide single sign-on, see the **Enterprise plan**, which supports SAML 2.0 with providers such as Okta, Azure AD, and Google Workspace.
+</Accordion>
+
+<Accordion title="How do I migrate from GitBook or Mintlify?">
+  InkLoom includes a one-click import tool that converts your existing GitBook or Mintlify content into InkLoom-compatible MDX files, preserving your page structure, navigation, and frontmatter.
+
+  To start a migration, go to **Dashboard → New Project → Import from** and select your source platform. Follow the step-by-step wizard to connect your existing workspace and review the imported pages before publishing.
+
+  For a detailed walkthrough, see the [Migration Guide](/guides/migration).
+</Accordion>
+
+<Accordion title="Can I use a custom domain?">
+  Yes, custom domains are available on the **Pro plan** and above. You can point any domain or subdomain — for example, `docs.yourcompany.com` — to your InkLoom project by adding a CNAME record in your DNS provider.
+
+  For step-by-step instructions, see the [Custom Domain Guide](/guides/custom-domain).
+</Accordion>
+
+<Accordion title="How does the GitHub Action know which files changed?">
+  The `inkloom/docs-action` GitHub Action runs on every push to your repository. It uses Git's diff to identify which source code files changed in that commit and passes only those files to InkLoom's AI pipeline for processing.
+
+  This means InkLoom only regenerates the documentation pages that correspond to the code that actually changed — not your entire docs site. This keeps AI credit usage efficient and ensures that unchanged pages are never overwritten with potentially different generated content.
+</Accordion>
+
+<Accordion title="Is there a page limit?">
+  No. InkLoom does not impose a page limit on any plan, including the free tier. You can publish as many pages as your project requires.
+
+  Storage limits for uploaded assets (images, files) may apply on the Free plan. Check **Settings → Billing** for your current usage.
+</Accordion>
+
+<Accordion title="What does 'evergreen docs' mean?">
+  Evergreen docs are documentation pages that automatically stay up to date as your code evolves. When you push a code change to GitHub, the `inkloom/docs-action` detects the affected files, uses AI to update the corresponding documentation, and opens a pull request for your team to review and merge.
+
+  The result is documentation that reflects your latest code without requiring a manual writing step after every change — so your docs are always current, or "evergreen."
+</Accordion>
+
+<Accordion title="How do I get my API key?">
+  Your InkLoom API key is available in the dashboard at **Settings → API Keys**. Click **Copy** next to your key to copy it to the clipboard.
+
+  Store the API key as a secret in your GitHub repository (**Settings → Secrets and variables → Actions**) using the name `INKLOOM_API_KEY`. Never commit it to your codebase. If your key is ever exposed, regenerate it immediately from the same settings page.
+</Accordion>

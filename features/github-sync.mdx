@@ -1,0 +1,73 @@
+---
+title: "GitHub Sync: Bidirectional Docs and Code Sync"
+sidebarTitle: "GitHub Sync"
+description: "Keep your docs and code in perfect sync. Edit in InkLoom or push to Git — changes flow both ways automatically, with branch previews on every PR."
+---
+
+InkLoom's GitHub sync creates a live, bidirectional bridge between your documentation and your repository. Every edit you make in InkLoom is committed back to GitHub, and every push to GitHub is reflected instantly in your docs — no manual copying, no drift.
+
+## Connect your repository
+
+Before sync can begin, authorize InkLoom to access your GitHub account and select the repo you want to link.
+
+<Steps>
+  <Step title="Open Settings">
+    Navigate to your project dashboard and click **Settings** in the left sidebar.
+  </Step>
+  <Step title="Go to GitHub Integration">
+    Select the **GitHub Integration** tab within Settings.
+  </Step>
+  <Step title="Connect a repository">
+    Click **Connect Repository**. InkLoom will redirect you to GitHub's OAuth authorization page.
+  </Step>
+  <Step title="Select your repo">
+    Choose the repository you want to sync from the dropdown list. You can search by name.
+  </Step>
+  <Step title="Authorize access">
+    Click **Authorize InkLoom** to grant read and write permissions. You'll be redirected back to the InkLoom dashboard once the connection is established.
+  </Step>
+</Steps>
+
+## How bidirectional sync works
+
+Once connected, every change in either direction is automatically reconciled.
+
+**Editing in InkLoom → GitHub**: When you save a page in the InkLoom editor, the change is committed to your repository's default branch within seconds. Each commit uses the message format `docs: update <page-title>` so your Git history stays clean and readable.
+
+**Pushing to GitHub → InkLoom**: When you or a teammate pushes a commit that touches any docs file, InkLoom detects the change via webhook and updates the corresponding pages in your project. The sync is typically reflected in the dashboard in under five seconds.
+
+<Info>
+  InkLoom tracks changes at the file level. Renaming or moving a file in GitHub will update the corresponding page slug in InkLoom automatically.
+</Info>
+
+## Branch previews
+
+Every time you open a pull request, InkLoom generates a unique preview URL scoped to that branch. The preview URL reflects exactly what your docs will look like after the branch is merged — no guesswork.
+
+Preview URLs follow the pattern:
+
+```
+https://<project>.inkloom.dev/preview/<branch-name>
+```
+
+Preview deployments are read-only and expire automatically when the PR is closed or merged.
+
+<Tip>
+  Share the preview URL in your PR description so reviewers can read the updated documentation alongside the code changes. This makes it easy to catch terminology mismatches and missing explanations before anything ships.
+</Tip>
+
+## Importing existing docs
+
+You can import documentation from any GitHub repository — even one that isn't the primary source for your InkLoom project. This is useful for pulling in a `docs/` folder from an open-source project or consolidating content spread across multiple repos.
+
+To import from a repository:
+
+1. Go to **Settings > GitHub Integration > Import Docs**.
+2. Paste the GitHub repository URL or search for it by name.
+3. Select the folder path within the repo that contains your docs (for example, `docs/` or `website/content/`).
+4. Choose whether InkLoom should monitor the repo for future changes or perform a one-time import.
+5. Click **Import**. InkLoom will create new pages for each file it finds.
+
+<Note>
+  Imported files are converted from Markdown to InkLoom's block format. Frontmatter fields like `title` and `description` are preserved automatically.
+</Note>

@@ -1,0 +1,51 @@
+---
+title: "How InkLoom Keeps Your Docs Evergreen Automatically"
+sidebarTitle: "How It Works"
+description: "Learn how InkLoom's GitHub Action, AI engine, and edge deployment pipeline work together to keep your documentation accurate and up to date."
+---
+
+InkLoom treats documentation as a living artifact of your codebase, not a separate project that has to be maintained by hand. When you connect a repository, InkLoom's AI reads your source code and generates structured documentation pages. From that point forward, the `inkloom/docs-action@v1` GitHub Action monitors every commit and automatically creates, updates, or removes documentation pages to reflect what's actually in the code — no manual intervention required.
+
+## The automated doc lifecycle
+
+Every documentation update follows a five-step pipeline that runs entirely within your existing GitHub workflow.
+
+<Steps>
+  <Step title="Push code">
+    A developer commits to `main` or opens a pull request. This is the only action your team needs to take — InkLoom handles everything else from here.
+  </Step>
+  <Step title="CI analyzes your changes">
+    The `inkloom/docs-action@v1` GitHub Action triggers on the push event. It checks out your repository and sends a diff of the changed files to the InkLoom AI engine, which identifies which parts of the documentation need to be created or updated.
+  </Step>
+  <Step title="Docs are generated">
+    The AI engine reads the affected source files — functions, classes, configuration, changelogs, and more — and produces or revises the corresponding documentation pages. New pages are added, existing pages are updated in place, and pages for removed code are flagged for deletion. The results are committed back to your repository automatically.
+  </Step>
+  <Step title="Review doc changes in the PR">
+    For pull requests, InkLoom generates a **branch preview** — a fully deployed, shareable URL that shows exactly how the documentation will look after the PR is merged. Reviewers can read the updated docs alongside the code diff without leaving GitHub.
+  </Step>
+  <Step title="Auto-deploy on merge">
+    When the pull request is merged, the updated documentation is built and deployed to the edge in seconds. Cache invalidation is automatic, so readers always see the latest version immediately after merge.
+  </Step>
+</Steps>
+
+## Two ways to write
+
+InkLoom gives you full flexibility over how you author and maintain documentation content.
+
+### Block-based editor in the dashboard
+
+The InkLoom dashboard includes a drag-and-drop block editor purpose-built for technical writing. You can add and rearrange code blocks, callouts, tabs, embedded demos, and more — no Markdown knowledge required. Changes you make in the editor are saved instantly and can be deployed without touching the command line.
+
+### Edit MDX files directly and push to GitHub
+
+If you prefer working in your own editor, every InkLoom page is backed by an MDX file in your connected GitHub repository. Open the file in VS Code, make your changes, and push to GitHub. InkLoom picks up the commit and syncs the updated content to the dashboard automatically.
+
+## Bidirectional sync
+
+No matter where a change originates, InkLoom keeps both sides in sync. Edits made in the InkLoom block editor are committed back to the corresponding MDX files in your GitHub repository within seconds. Equally, commits pushed to GitHub — whether by a developer updating source code, a technical writer editing MDX directly, or the InkLoom GitHub Action — are reflected in the dashboard immediately.
+
+This means your repository is always the source of truth, your dashboard always reflects what's in the repo, and your team is free to work in whichever environment they prefer without creating conflicts or drift.
+
+<Tip>
+  Make the most of branch previews by sharing the InkLoom preview URL in your pull request description. Reviewers can read the updated documentation in context alongside the code diff, catching inaccuracies or gaps before they ever reach production.
+</Tip>

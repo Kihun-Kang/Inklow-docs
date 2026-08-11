@@ -1,0 +1,111 @@
+---
+title: "InkLoom REST API Overview — Core Concepts & Reference"
+sidebarTitle: "Overview"
+description: "Learn how the InkLoom REST API works — base URL, request format, rate limits, cursor-based pagination, and error handling."
+---
+
+The InkLoom REST API gives you programmatic access to your documentation projects, pages, and deployments. Every feature available in the dashboard is also available through the API, so you can automate workflows, integrate InkLoom into your CI/CD pipeline, and build custom tooling on top of the platform.
+
+## Base URL
+
+All API requests are made to the following base URL:
+
+```
+https://api.inkloom.io/v1
+```
+
+Append the resource path to this base URL for every request. For example, to list your projects, call `GET https://api.inkloom.io/v1/projects`.
+
+## Request Format
+
+Send all request bodies as JSON and set the `Content-Type: application/json` header on any request that includes a body. Every API response is also returned as JSON, regardless of whether the request succeeded or failed.
+
+<Info>
+  All timestamps in request and response payloads follow the **ISO 8601** format — for example, `2024-11-01T14:32:00Z`.
+</Info>
+
+## Rate Limits
+
+Rate limits are enforced per API key and vary by plan. Exceeding the limit on your plan returns a `429 rate_limited` error.
+
+| Plan       | Rate Limit        |
+| ---------- | ----------------- |
+| Pro        | 300 requests/min  |
+| Ultimate   | 1,000 requests/min |
+| Enterprise | Custom            |
+
+Every API response includes the following headers so you can track your usage in real time:
+
+| Header                  | Description                                                          |
+| ----------------------- | -------------------------------------------------------------------- |
+| `X-RateLimit-Remaining` | The number of requests remaining in the current one-minute window.   |
+| `X-RateLimit-Reset`     | A Unix timestamp indicating when the current rate limit window resets. |
+
+<Tip>
+  Monitor `X-RateLimit-Remaining` in your integration and back off proactively before the limit is reached to avoid interruptions.
+</Tip>
+
+## Pagination
+
+The InkLoom API uses **cursor-based pagination** for all list endpoints. Rather than page numbers, each response gives you a cursor pointing to the next batch of results. This approach is stable even when records are inserted or deleted between requests.
+
+A paginated response always contains three fields at the top level:
+
+- **`data`** — the array of returned items for the current page.
+- **`next_cursor`** — an opaque string you pass as the `cursor` query parameter to retrieve the next page. This field is `null` when you are on the last page.
+- **`has_more`** — a boolean indicating whether additional pages exist.
+
+**Example paginated response:**
+
+```json
+{
+  "data": [
+    { "id": "proj_01", "name": "Public Docs" },
+    { "id": "proj_02", "name": "Internal Wiki" }
+  ],
+  "next_cursor": "cur_eyJpZCI6InByb2pfMDIifQ",
+  "has_more": true
+}
+```
+
+**Fetch the next page** by passing the `next_cursor` value as the `cursor` query parameter:
+
+```bash
+curl "https://api.inkloom.io/v1/projects?cursor=cur_eyJpZCI6InByb2pfMDIifQ" \
+  -H "Authorization: Bearer ik_live_xxxxxxxxxxxx"
+```
+
+Continue following `next_cursor` until `has_more` is `false`.
+
+## Errors
+
+When a request fails, the API returns a JSON error object with a machine-readable `code`, a human-readable `message`, and the HTTP `status` code.
+
+**Error response format:**
+
+```json
+{
+  "error": {
+    "code": "not_found",
+    "message": "Project not found",
+    "status": 404
+  }
+}
+```
+
+Use the `code` field in your error-handling logic — it is stable across API versions. The `message` field is intended for humans and may change.
+
+**Common error codes:**
+
+| HTTP Status | Code               | Meaning                                               |
+| ----------- | ------------------ | ----------------------------------------------------- |
+| `401`       | `unauthorized`     | API key is missing, malformed, or invalid.            |
+| `403`       | `forbidden`        | The key lacks the required scope for this action.     |
+| `404`       | `not_found`        | The requested resource does not exist.                |
+| `422`       | `validation_error` | The request body failed validation.                   |
+| `429`       | `rate_limited`     | You have exceeded the rate limit for your plan.       |
+| `500`       | `internal_error`   | An unexpected error occurred on the InkLoom servers.  |
+
+<Note>
+  Access to the InkLoom REST API requires a **Pro plan or above**. Upgrade your plan in the InkLoom dashboard under **Settings > Billing**.
+</Note>

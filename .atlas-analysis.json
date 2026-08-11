@@ -1,30 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
+  "projectType": "saas",
+  "projectName": "InkLoom",
+  "projectDescription": "InkLoom is an AI-powered documentation platform that automatically generates, syncs, and deploys your docs from your codebase via GitHub integration.",
   "theme": "luma",
-  "name": "InkLoom",
-  "colors": {
-    "primary": "#1be49c",
-    "light": "#0c8c5c",
-    "dark": "#0c0c0c"
-  },
-  "favicon": "https://media.brand.dev/483ee27f-08fb-4d32-842d-86b4c40f9fb4.png",
-  "logo": {
-    "light": "https://media.brand.dev/07fcb57b-76a5-49f6-abdb-740da69c791f.svg",
-    "dark": "https://media.brand.dev/07fcb57b-76a5-49f6-abdb-740da69c791f.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@inkloom.io"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Get Started Free",
-      "href": "https://inkloom.io/signup"
-    }
-  },
+  "primaryColor": "#1be49c",
+  "lightColor": "#0c8c5c",
+  "darkColor": "#0c0c0c",
   "navigation": {
     "tabs": [
       {
@@ -105,10 +86,27 @@
       }
     ]
   },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/inkloom_io",
-      "github": "https://github.com/inkloom-io/inkloom"
-    }
-  }
+  "keyFeatures": [
+    "AI documentation generation from source code",
+    "Bidirectional GitHub sync with branch previews",
+    "Block-based editor for technical writing",
+    "OpenAPI / interactive API reference generation",
+    "One-click edge deployment via Cloudflare (300+ locations)",
+    "Evergreen docs — GitHub Action auto-updates docs on every commit",
+    "Real-time collaboration with inline comments and role-based access",
+    "CLI for scripting and CI/CD pipeline integration",
+    "One-click migration from GitBook and Mintlify",
+    "Full-text client-side search"
+  ],
+  "publicApiSurface": [
+    "npx create-inkloom@latest <project-name>",
+    "inkloom deploy <project-id> --production",
+    "inkloom/docs-action@v1 (GitHub Action)",
+    "GET /api/v1/projects",
+    "POST /api/v1/projects",
+    "GET /api/v1/projects/:id/pages",
+    "POST /api/v1/projects/:id/pages",
+    "POST /api/v1/projects/:id/deployments",
+    "GET /api/v1/deployments/:id"
+  ]
 }

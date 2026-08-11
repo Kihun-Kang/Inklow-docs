@@ -1,0 +1,129 @@
+---
+title: "Troubleshoot Common InkLoom Issues and Errors"
+sidebarTitle: "Troubleshooting"
+description: "Fix GitHub Action failures, docs not updating, custom domain errors, SSL issues, 404 pages, deployment failures, and incorrect AI generation in InkLoom."
+---
+
+Most InkLoom issues have a straightforward root cause, and this guide walks you through diagnosing and resolving the most common ones. Work through the relevant section below, and if you are still stuck, contact the support team at [support@inkloom.io](mailto:support@inkloom.io).
+
+## GitHub Action Not Triggering
+
+If the `inkloom/docs-action` is not running when you push to your repository, the most common causes are missing secrets or a misconfigured workflow file.
+
+<Steps>
+  <Step title="Verify repository secrets">
+    Go to your GitHub repository and open **Settings → Secrets and variables → Actions**. Confirm that both `INKLOOM_API_KEY` and `INKLOOM_PROJECT_ID` are listed. If either is missing, add it now — you can find your API key and project ID in your InkLoom dashboard under **Settings → API Keys**.
+  </Step>
+  <Step title="Check the Actions tab">
+    Open the **Actions** tab in your GitHub repository and look for the InkLoom workflow. If no runs appear, the workflow file may not be committed to the correct branch or the trigger event may not match. Confirm that the workflow's `on` trigger includes `push` for your default branch.
+  </Step>
+  <Step title="Inspect workflow error logs">
+    Click into any failed or skipped run to read the full log output. Expand each step to identify the exact error. Common messages include authentication failures (wrong API key), invalid project ID, or a network timeout.
+  </Step>
+</Steps>
+
+## Docs Not Updating After Push
+
+If the GitHub Action runs successfully but your docs site still shows stale content, work through the following checks.
+
+<Steps>
+  <Step title="Confirm the Action completed without errors">
+    In the **Actions** tab, verify that the InkLoom workflow shows a green checkmark for the most recent push. A yellow pending status means deployment is still in progress — wait a minute and refresh.
+  </Step>
+  <Step title="Check which files are in scope">
+    InkLoom watches your source code files for changes. It does not re-generate docs when files inside your docs directory itself change — only when the upstream source code they document changes. Verify that the files you edited are source code (e.g., `.ts`, `.py`, `.go`) rather than `.mdx` docs files.
+  </Step>
+  <Step title="Review the deployment log">
+    Go to **Dashboard → project → Deployments** and open the latest deployment. If it shows a failure, the error detail will indicate why the updated pages were not published.
+  </Step>
+</Steps>
+
+## Custom Domain Not Resolving
+
+After adding a custom domain, it is normal for the domain to be unreachable for a period while DNS changes propagate globally.
+
+- **DNS propagation** can take up to **48 hours** depending on your domain registrar and the TTL on your existing DNS records. Use a tool like [dnschecker.org](https://dnschecker.org) to monitor propagation progress.
+- **Verify your CNAME record** is configured exactly as follows, replacing `your-project` with your actual InkLoom project slug:
+
+  ```
+  docs.yourcompany.com  CNAME  your-project.inkloom.dev
+  ```
+
+- **Check domain status** in the dashboard under **Settings → Domains**. InkLoom shows whether DNS verification has passed and flags any configuration problems it detects.
+
+<Warning>
+  Do not use an A record pointing to an IP address. InkLoom requires a CNAME record pointing to your `*.inkloom.dev` subdomain. Using an A record will prevent SSL provisioning from completing.
+</Warning>
+
+## SSL Certificate Not Provisioned
+
+InkLoom automatically provisions a TLS certificate for your custom domain once DNS verification passes. If the certificate has not appeared after DNS has propagated, try the following:
+
+<Steps>
+  <Step title="Wait for DNS verification">
+    Confirm in **Settings → Domains** that InkLoom has verified your CNAME record. If verification is still pending, wait for DNS propagation to complete before proceeding.
+  </Step>
+  <Step title="Trigger re-provisioning">
+    If DNS is verified but the certificate is still missing after 15 minutes, remove the domain from **Settings → Domains** and re-add it. This triggers a fresh certificate provisioning attempt.
+  </Step>
+  <Step title="Check for CAA records">
+    Some domains have CAA (Certification Authority Authorization) DNS records that restrict which certificate authorities can issue certs. If your domain has CAA records, add an entry for InkLoom's CA (Let's Encrypt) or remove the restriction.
+  </Step>
+</Steps>
+
+## AI Generation Produced Incorrect Docs
+
+AI-generated documentation is always surfaced as a pull request for human review — it is never merged automatically. If a generated page contains inaccuracies, you have several options:
+
+- **Edit the PR directly** — Open the pull request created by the InkLoom Action and edit any MDX file inline on GitHub before merging.
+- **Use the block editor** — Merge the PR, then open the page in the InkLoom dashboard's block editor to make corrections. Publish when ready.
+- **Regenerate a specific page** — In the dashboard, navigate to the page, click **⋯ → Regenerate with AI**, and InkLoom will produce a fresh draft based on the current state of the source file.
+
+<Note>
+  AI generation quality improves significantly when your source code includes thorough inline comments and docstrings. The more context InkLoom has, the more accurate the generated documentation will be.
+</Note>
+
+## Page Shows 404
+
+A 404 error on a page that you know exists usually means a mismatch between the slug in `docs.json` and the actual file path.
+
+<Steps>
+  <Step title="Check the slug in docs.json">
+    Open `docs.json` and find the entry for the missing page. Confirm the slug is the exact file path relative to your project root, without the `.mdx` extension. For example, a file at `guides/new-feature.mdx` must be listed as `"guides/new-feature"`.
+  </Step>
+  <Step title="Verify casing">
+    File paths in InkLoom are case-sensitive. `guides/New-Feature` and `guides/new-feature` are different slugs. Make sure the casing in `docs.json` matches the casing of the actual file name.
+  </Step>
+  <Step title="Confirm the file exists in the repository">
+    Check that the MDX file is actually committed to your repository. A file that exists locally but has not been pushed will not be available to InkLoom.
+  </Step>
+</Steps>
+
+## Deployment Failed
+
+A failed deployment prevents your latest changes from going live. To diagnose the cause:
+
+<Steps>
+  <Step title="Open the deployment log">
+    Go to **Dashboard → project → Deployments** and click the failed deployment. Read the log output to identify the error.
+  </Step>
+  <Step title="Check for invalid MDX syntax">
+    The most common deployment failure is a syntax error in an MDX file — an unclosed JSX tag, invalid frontmatter YAML, or an unrecognized component. The log will name the file and line number where the error occurred.
+  </Step>
+  <Step title="Validate locally with the CLI">
+    Run the InkLoom CLI in your project directory to catch syntax errors before pushing:
+
+    ```bash
+    inkloom validate
+    ```
+
+    The CLI reports all validation errors across your MDX files so you can fix them in one pass.
+  </Step>
+  <Step title="Fix and redeploy">
+    Correct the identified errors, commit the fix, and push. InkLoom will trigger a new deployment automatically.
+  </Step>
+</Steps>
+
+<Tip>
+  If you have worked through the relevant section above and are still experiencing an issue, email [support@inkloom.io](mailto:support@inkloom.io) with your project slug, a description of the problem, and any relevant error messages or screenshots. The support team typically responds within one business day on Pro and above.
+</Tip>

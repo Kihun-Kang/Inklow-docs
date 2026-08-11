@@ -1,0 +1,93 @@
+---
+title: "Customize Your InkLoom Docs Theme and Branding"
+sidebarTitle: "Themes"
+description: "Configure brand colors, fonts, logo, favicon, and dark mode for your InkLoom docs site from the Settings > Appearance panel."
+---
+
+InkLoom gives you full control over how your documentation looks so it feels like a natural extension of your product's brand. You can customize colors, typography, your logo, a favicon, and how the site responds to a visitor's preferred color scheme — all without writing a line of CSS.
+
+## Appearance Settings
+
+All theme options live in one place. To open the appearance panel, go to your project in the dashboard and navigate to **Settings → Appearance**. Changes you save here are applied to your live docs site on the next deployment.
+
+Alternatively, you can define most appearance values directly in your project's `docs.json` file. The dashboard UI and the config file stay in sync — editing one updates the other.
+
+## Colors
+
+InkLoom uses three brand color slots: **primary**, **light**, and **dark**. These colors drive interactive elements like links, buttons, sidebar highlights, and code block accents across both light and dark mode.
+
+| Slot | Purpose |
+|---|---|
+| `primary` | The main accent color — used for links, active nav items, and buttons. |
+| `light` | A lighter variant used for hover states and subtle backgrounds in dark mode. |
+| `dark` | A darker variant used for text and high-contrast elements in light mode. |
+
+Set your colors using six-digit hex values. In `docs.json`, they live under the `colors` key:
+
+```json
+{
+  "colors": {
+    "primary": "#1be49c",
+    "light": "#0c8c5c",
+    "dark": "#0c0c0c"
+  }
+}
+```
+
+You can also set these visually using the color pickers in **Settings → Appearance → Colors**. The dashboard previews how each color will look on interactive elements before you save.
+
+## Logo and Favicon
+
+Upload separate logo files for light and dark mode so your brand always looks sharp regardless of the visitor's color scheme preference.
+
+<Steps>
+  <Step title="Open Appearance settings">
+    Go to **Settings → Appearance** and scroll to the **Logo** section.
+  </Step>
+  <Step title="Upload your light mode logo">
+    Click **Upload** under **Logo (light mode)** and select an SVG or PNG. SVG is recommended for crisp rendering at all screen sizes.
+  </Step>
+  <Step title="Upload your dark mode logo">
+    Click **Upload** under **Logo (dark mode)**. If your brand uses a single logo that works on both backgrounds, you can reuse the same file.
+  </Step>
+  <Step title="Upload a favicon">
+    Scroll to the **Favicon** section and upload a square PNG or ICO file. A 32×32 or 64×64 pixel image works best.
+  </Step>
+  <Step title="Save changes">
+    Click **Save changes**. Your new logo and favicon will appear on the next deployment.
+  </Step>
+</Steps>
+
+<Note>
+  Logo and favicon values can also be set in `docs.json` using the `logo` and `favicon` keys with paths to your image files relative to the project root.
+</Note>
+
+## Fonts
+
+Choose the typefaces used for headings and body text from InkLoom's curated font library. The selected fonts are loaded from a CDN and applied site-wide.
+
+- **Heading font** — Controls the weight and character of your `h1`–`h6` elements and page titles.
+- **Body font** — Controls all prose text, including paragraphs, lists, and table content.
+
+To change fonts, go to **Settings → Appearance → Typography**, select a font from each dropdown, and click **Save changes**. You can also define fonts in `docs.json`:
+
+```json
+{
+  "fonts": {
+    "heading": "Inter",
+    "body": "Source Serif 4"
+  }
+}
+```
+
+## Dark Mode
+
+InkLoom docs automatically support both light and dark color schemes. The site detects each visitor's operating system or browser preference and switches between modes accordingly — no extra configuration required.
+
+Your `primary`, `light`, and `dark` color values are mapped intelligently so that the right shade is used in each mode. The heading and body fonts remain the same across both modes.
+
+Visitors can also manually toggle between light and dark mode using the theme switcher in the docs site header, overriding their system preference for that session.
+
+<Tip>
+  Always check your brand colors in both light and dark mode before publishing. Use a tool like [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to verify that your `primary` color meets a minimum contrast ratio of 4.5:1 against white (light mode) and against dark backgrounds. Poor contrast can make links and buttons difficult to read for visitors with low vision.
+</Tip>

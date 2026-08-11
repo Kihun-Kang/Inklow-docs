@@ -1,0 +1,70 @@
+---
+title: "Block Editor: Build Beautiful Docs Without Markdown"
+sidebarTitle: "Block Editor"
+description: "Drag, drop, and arrange content blocks to build rich documentation pages. No Markdown required — perfect for writers and developers alike."
+---
+
+InkLoom's block editor lets you compose documentation pages by adding and arranging discrete content blocks — code snippets, callouts, tabs, tables, and more. Every block is editable inline, so you spend your time on content rather than syntax. You can access the editor from any page inside your InkLoom project dashboard.
+
+## Available block types
+
+The editor ships with a full library of blocks covering every common documentation need:
+
+- **Headings** — H1 through H4 for structuring your page hierarchy.
+- **Paragraphs** — standard prose text with inline bold, italic, code, and link formatting.
+- **Code blocks** — multi-line code with syntax highlighting across 100+ languages, an optional title bar, and diff markers for showing additions and deletions.
+- **Callouts** — `Note`, `Warning`, `Tip`, and `Info` variants for surfacing important information at a glance.
+- **Tabs** — group related content into tabbed sections so readers can switch between options without scrolling.
+- **Tables** — structured data with sortable columns and inline cell editing.
+- **Images** — upload directly or paste a URL; images are optimized and served from InkLoom's CDN.
+- **Embeds** — drop in a URL from YouTube, Loom, CodeSandbox, or Figma to render a live embedded preview.
+- **Interactive API playground** — a try-it widget powered by your OpenAPI spec, embeddable anywhere on any page.
+
+## Creating a new page
+
+<Steps>
+  <Step title="Open your project">
+    Go to the InkLoom dashboard and select the project you want to add a page to.
+  </Step>
+  <Step title="Add a new page">
+    Click the **+** icon next to the section or folder where the page should live in the sidebar.
+  </Step>
+  <Step title="Name your page">
+    Type a page title in the dialog that appears. InkLoom uses this as both the display title and the initial URL slug (you can change the slug later in page settings).
+  </Step>
+  <Step title="Start adding blocks">
+    Click anywhere in the empty page body to place your cursor, then use the **/** command to open the block picker and select the block type you want. Blocks can be reordered at any time by dragging the handle on the left side of each block.
+  </Step>
+</Steps>
+
+## Code blocks
+
+Code blocks in the editor support every feature you'd expect from a dedicated code tool.
+
+To add a code block, type `/` and select **Code Block** from the picker. Then:
+
+1. **Select your language** — click the language badge in the top-right corner of the block and choose from the dropdown. Syntax highlighting updates immediately.
+2. **Add a title** — click **Add title** above the code area to show a filename or label in the rendered block (for example, `config.ts` or `Example request`).
+3. **Use diff markers** — prefix any line with `+` and set the language to `diff` (or use the diff overlay toggle) to render additions in green and deletions in red. This is especially useful in migration guides.
+
+```diff
+- const client = new InkLoom({ version: 1 });
++ const client = new InkLoom({ version: 2, region: "us-east" });
+```
+
+## Keyboard shortcuts
+
+The block editor is designed for speed. The most useful shortcuts to learn:
+
+| Shortcut | Action |
+|---|---|
+| `/` | Open the block picker at the current cursor position |
+| `Cmd / Ctrl + K` | Open the global search palette |
+| `Cmd / Ctrl + Z` | Undo the last change |
+| `Cmd / Ctrl + Shift + Z` | Redo |
+| `Cmd / Ctrl + D` | Duplicate the currently selected block |
+| `Backspace` (on empty block) | Delete the block and move cursor up |
+
+<Tip>
+  The block editor is a great choice for technical writers, product managers, and support engineers who need to contribute to docs but prefer not to edit raw Markdown. Share edit access with your whole team — no Git knowledge required.
+</Tip>

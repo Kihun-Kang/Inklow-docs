@@ -1,0 +1,100 @@
+---
+title: "InkLoom — AI-Powered Documentation That Writes Itself"
+sidebarTitle: "Introduction"
+description: "InkLoom generates, syncs, and deploys your docs automatically from your codebase. Meet the documentation platform that stays in sync with your code."
+---
+
+InkLoom is an AI-powered documentation platform built for engineering teams who want accurate, up-to-date docs without the manual overhead. Point InkLoom at your codebase, and it generates comprehensive documentation automatically — then keeps it evergreen through a GitHub Action that syncs docs on every commit.
+
+## Get started
+
+<CardGroup cols={2}>
+  <Card
+    title="Quickstart"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Go from zero to deployed docs in under 5 minutes with the InkLoom CLI and GitHub integration.
+  </Card>
+  <Card
+    title="How It Works"
+    icon="bolt"
+    href="/how-it-works"
+  >
+    Understand the automated lifecycle that keeps your docs in sync with your codebase at all times.
+  </Card>
+  <Card
+    title="GitHub Sync"
+    icon="github"
+    href="/features/github-sync"
+  >
+    Learn how bidirectional GitHub sync and branch previews fit into your existing pull request workflow.
+  </Card>
+  <Card
+    title="AI Doc Generation"
+    icon="wand-magic-sparkles"
+    href="/features/ai-generation"
+  >
+    See how InkLoom's AI reads your source code and produces structured, human-quality documentation pages.
+  </Card>
+</CardGroup>
+
+## What you can do with InkLoom
+
+<CardGroup cols={3}>
+  <Card
+    title="Generate Docs from Code"
+    icon="wand-magic-sparkles"
+  >
+    Point InkLoom at any repository and let the AI produce complete, structured documentation in seconds.
+  </Card>
+  <Card
+    title="Stay Evergreen Automatically"
+    icon="bolt"
+  >
+    The `inkloom/docs-action@v1` GitHub Action updates your docs on every push so they never fall behind your code.
+  </Card>
+  <Card
+    title="Interactive API Reference"
+    icon="code"
+  >
+    Drop in an OpenAPI spec and instantly get a fully interactive API reference your users can try live.
+  </Card>
+  <Card
+    title="Deploy to the Edge"
+    icon="globe"
+  >
+    One-click deployment to Cloudflare Pages across 300+ locations with custom domains and automatic SSL.
+  </Card>
+  <Card
+    title="Collaborate in Real Time"
+    icon="users"
+  >
+    Live cursors, inline comments, and role-based access control keep your whole team aligned on docs.
+  </Card>
+  <Card
+    title="Migrate in One Click"
+    icon="puzzle-piece"
+  >
+    Import your existing docs from GitBook or Mintlify instantly and pick up right where you left off.
+  </Card>
+</CardGroup>
+
+## How onboarding works
+
+Get from a blank slate to live, AI-generated documentation in four steps.
+
+<Steps>
+  <Step title="Create a project">
+    Run `npx create-inkloom@latest my-docs` to scaffold your documentation project locally, or create one directly from the InkLoom dashboard.
+  </Step>
+  <Step title="Connect GitHub">
+    Link your repository in **Settings → GitHub Integration**. InkLoom installs the GitHub App and gains read access to your codebase.
+  </Step>
+  <Step title="Generate your docs">
+    Click **Generate Docs** in the dashboard. InkLoom's AI scans your codebase and produces a full set of documentation pages — ready to edit and publish.
+  </Step>
+  <Step title="Deploy to the world">
+    Hit **Deploy** in the dashboard or run `inkloom deploy <project-id> --production` from the CLI. Your docs go live on the edge in seconds.
+  </Step>
+</Steps>

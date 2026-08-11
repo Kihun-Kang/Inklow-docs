@@ -1,0 +1,92 @@
+---
+title: "Migrate Your Docs to InkLoom from GitBook or Mintlify"
+sidebarTitle: "Migrating"
+description: "Import your existing documentation from GitBook or Mintlify into InkLoom with one click — pages, navigation, and metadata all transfer automatically."
+---
+
+Switching documentation platforms doesn't have to mean starting from scratch. InkLoom's one-click importer brings your existing documentation — pages, navigation structure, metadata, images, and formatting — directly into your new InkLoom project. The whole process takes just a few minutes, and InkLoom automatically sets up redirects so none of your existing links break.
+
+## What gets imported
+
+InkLoom preserves as much of your existing content as possible during the migration. Here is what transfers automatically:
+
+<CardGroup cols={2}>
+  <Card title="Pages & Content" icon="file-lines">
+    All pages, headings, paragraphs, code blocks, callouts, and inline formatting are imported and converted to InkLoom MDX format.
+  </Card>
+  <Card title="Navigation Structure" icon="sitemap">
+    Your sidebar groups, page ordering, and nested sections are recreated exactly as they appeared in your original documentation.
+  </Card>
+  <Card title="Metadata" icon="tag">
+    Page titles, descriptions, and slug paths carry over so your SEO equity is preserved after the move.
+  </Card>
+  <Card title="Images & Assets" icon="image">
+    Embedded images are copied to InkLoom's asset storage and all image references are updated automatically.
+  </Card>
+</CardGroup>
+
+<Note>
+  InkLoom configures redirects from your old documentation URLs to the equivalent InkLoom pages automatically. Any links pointing to your previous docs — from blog posts, READMEs, or third-party sites — will continue to work after the migration.
+</Note>
+
+## Migrate from Mintlify
+
+<Steps>
+  <Step title="Start the import">
+    In the [InkLoom dashboard](https://app.inkloom.dev), open your project and click **Import** in the left sidebar, then select **Import from Mintlify**.
+  </Step>
+  <Step title="Authorize your Mintlify account">
+    Click **Connect Mintlify** and sign in to your Mintlify account when prompted. InkLoom requests read-only access to your documentation content.
+  </Step>
+  <Step title="Select your project">
+    Choose the Mintlify project you want to import from the dropdown list, then click **Next**.
+  </Step>
+  <Step title="Review imported pages and navigation">
+    InkLoom displays a preview of the imported page tree and sidebar navigation. Check that all sections and pages are present, and use the toggle next to any page to exclude it from the import if needed.
+  </Step>
+  <Step title="Complete the import">
+    Click **Complete Import**. InkLoom transfers your content, sets up redirects, and opens your new project. The process typically completes in under two minutes.
+  </Step>
+</Steps>
+
+## Migrate from GitBook
+
+<Steps>
+  <Step title="Start the import">
+    In the [InkLoom dashboard](https://app.inkloom.dev), open your project and click **Import** in the left sidebar, then select **Import from GitBook**.
+  </Step>
+  <Step title="Authorize your GitBook account">
+    Click **Connect GitBook** and sign in to your GitBook account when prompted. InkLoom requests read-only access to your spaces.
+  </Step>
+  <Step title="Select your space">
+    Choose the GitBook space you want to import from the dropdown list, then click **Next**.
+  </Step>
+  <Step title="Review imported pages and navigation">
+    InkLoom displays a preview of the imported page tree mirroring your GitBook space structure. Verify the content looks correct and deselect any pages you do not want to carry over.
+  </Step>
+  <Step title="Complete the import">
+    Click **Complete Import**. InkLoom converts all GitBook blocks to InkLoom components, transfers your assets, and configures redirects automatically.
+  </Step>
+</Steps>
+
+## Migration credit
+
+<Tip>
+  When you switch from GitBook or Mintlify and sign up for an InkLoom **annual plan**, you receive a migration credit applied to your first invoice. This credit helps offset the cost of your previous platform's remaining subscription. Contact [support@inkloom.dev](mailto:support@inkloom.dev) after completing your import to have the credit applied.
+</Tip>
+
+## After your migration
+
+Once the import finishes, take a few minutes to:
+
+<Accordion title="Verify your navigation structure">
+  Open the **Navigation** editor in your InkLoom project settings and confirm that page groups, ordering, and nesting match your original documentation. Drag pages to adjust the order if anything looks off.
+</Accordion>
+
+<Accordion title="Check your custom domain">
+  If your old docs were served from a custom domain, follow the [Custom Domain guide](/guides/custom-domain) to connect it to InkLoom. You'll want to update your DNS records before pointing users to the new site.
+</Accordion>
+
+<Accordion title="Invite your team">
+  Add your writers, developers, and reviewers to the new InkLoom project. See the [Collaboration guide](/guides/collaboration) for instructions on inviting members and assigning roles.
+</Accordion>

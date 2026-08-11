@@ -1,0 +1,102 @@
+---
+title: "Interactive API Reference Docs from OpenAPI Specs"
+sidebarTitle: "OpenAPI Docs"
+description: "Drop in an OpenAPI spec and get fully interactive API reference docs with live request testing, schema details, and authentication guides."
+---
+
+InkLoom turns your OpenAPI specification into a polished, interactive API reference in seconds. Upload a YAML or JSON spec and InkLoom generates individual endpoint pages, request and response schemas, authentication documentation, and an in-browser playground — all without any manual writing.
+
+## Upload your OpenAPI spec
+
+<Steps>
+  <Step title="Open the API Reference tab">
+    Go to your project dashboard, select your project, and click the **API Reference** tab in the top navigation.
+  </Step>
+  <Step title="Upload your spec">
+    Click **Upload Spec** and choose your OpenAPI file. Both YAML (`.yaml` / `.yml`) and JSON (`.json`) formats are supported. InkLoom validates the spec on upload and will flag any structural errors before proceeding.
+  </Step>
+  <Step title="Or provide a hosted URL">
+    If your spec is already hosted (for example, at `https://api.acme.com/openapi.yaml`), paste the URL into the **Spec URL** field instead. InkLoom will fetch the file and can re-fetch it automatically on every deploy to stay in sync.
+  </Step>
+  <Step title="Confirm and generate">
+    Click **Generate Reference**. InkLoom creates a page for every endpoint path and groups them by the tags defined in your spec.
+  </Step>
+</Steps>
+
+## What gets generated
+
+For each endpoint defined in your spec, InkLoom produces:
+
+- **Endpoint pages** — one page per operation (GET, POST, PUT, DELETE, etc.), with the HTTP method, path, and summary shown prominently.
+- **Request schema** — all path, query, header, and body parameters with their types, formats, required status, and description.
+- **Response schemas** — documented response codes with example bodies rendered in collapsible sections.
+- **Authentication details** — security schemes defined in your spec (API key, Bearer token, OAuth 2.0) are surfaced in a dedicated section with usage instructions.
+- **Interactive try-it widget** — an embedded playground on every endpoint page so readers can test real API calls without leaving the docs.
+
+## Keeping specs in sync
+
+As your API evolves, InkLoom gives you two ways to keep the reference current:
+
+**Hosted URL sync**: If you provided a spec URL during setup, InkLoom re-fetches it on every deployment. Any new endpoints, updated parameters, or changed descriptions are reflected automatically — no manual re-upload needed.
+
+**Manual refresh**: From the **API Reference** tab, click **Refresh Spec** at any time to pull the latest version from your hosted URL or re-upload a new file.
+
+**CLI and API trigger**: You can also trigger a spec refresh programmatically:
+
+```bash
+inkloom spec refresh proj_abc --url https://api.acme.com/openapi.yaml
+```
+
+<Note>
+  If you rename or remove an endpoint in your spec, InkLoom archives the corresponding page rather than deleting it. Archived pages are not publicly visible but can be restored if needed.
+</Note>
+
+## Interactive playground
+
+Every endpoint page includes an embedded try-it widget. Readers can fill in parameters, provide an auth token, and send real HTTP requests directly from the documentation — no separate tool required.
+
+The playground shows the constructed request URL, the full request headers, and the raw response body. Failed requests display the error code and message inline so readers can debug without leaving the page.
+
+<Tip>
+  To pre-populate the playground with a sample auth token for your users, set a **Default Auth Value** under **API Reference > Settings**. This is useful for documentation sites aimed at evaluating your API during a free trial.
+</Tip>
+
+## Example OpenAPI spec
+
+Here's a minimal spec snippet to illustrate the format InkLoom expects:
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Acme API
+  version: 1.0.0
+paths:
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      operationId: getUser
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A user object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+        "404":
+          description: User not found
+```
+
+Upload a complete spec in this format and InkLoom handles the rest.

@@ -1,0 +1,99 @@
+---
+title: "Deploy Docs to the Edge in Seconds with InkLoom"
+sidebarTitle: "Deployment"
+description: "Deploy your documentation to 300+ edge locations worldwide with one click. Custom domains, automatic SSL, and instant cache invalidation included."
+---
+
+InkLoom deploys your documentation to a global edge network in a single step. Whether you click a button in the dashboard or run a CLI command in CI, your pages are live at the edge in roughly two seconds — with automatic SSL and instant cache invalidation included at every tier.
+
+## One-click deploy
+
+The fastest way to deploy is directly from the project dashboard.
+
+<Steps>
+  <Step title="Open your project">
+    Navigate to your project in the InkLoom dashboard.
+  </Step>
+  <Step title="Click Deploy">
+    Click the **Deploy** button in the top-right corner of the project overview. InkLoom builds your pages, optimizes assets, and pushes to the edge automatically.
+  </Step>
+  <Step title="View your live URL">
+    Once the deployment completes, your live documentation URL is shown in the deployment confirmation panel. Each deployment also receives a unique ID you can reference later.
+  </Step>
+</Steps>
+
+## Deploy from the CLI
+
+For CI pipelines or scripted workflows, use the `inkloom deploy` command:
+
+```bash
+inkloom deploy proj_abc --production
+# ✓ Building pages (24 pages)  0.8s
+# ✓ Optimizing assets          0.3s
+# ✓ Deploying to edge          1.1s
+# ✓ Deployment complete
+# URL: https://docs.acme.com
+# ID: dep_7f3k9x · 2.2s total
+```
+
+Replace `proj_abc` with your project ID, found in **Dashboard > Settings > General**. The `--production` flag promotes the deployment to your primary domain. Omit it to create a preview deployment instead.
+
+## Edge network
+
+Every InkLoom deployment runs on Cloudflare Pages, distributed across 300+ edge locations worldwide. This means your readers load documentation from a server that's geographically close to them — typically under 50ms response times globally.
+
+Key network features:
+
+- **Automatic SSL** — TLS certificates are provisioned and renewed automatically for every domain, including custom domains.
+- **Instant cache invalidation** — when you deploy, the previous version is purged from every edge node simultaneously. Readers always see the latest content within seconds.
+- **DDoS protection** — Cloudflare's network absorbs traffic spikes without any configuration on your part.
+
+## Custom domains
+
+<Note>
+  Custom domains require the **Pro plan** or above. On the Free plan, your docs are served from `<project>.inkloom.dev`.
+</Note>
+
+To serve your docs from your own domain (for example, `docs.acme.com`):
+
+<Steps>
+  <Step title="Open domain settings">
+    Go to **Dashboard > project > Settings > Domains** and click **Add Domain**.
+  </Step>
+  <Step title="Enter your domain">
+    Type your desired domain or subdomain (for example, `docs.acme.com`) and click **Add**.
+  </Step>
+  <Step title="Add a CNAME record">
+    In your DNS provider, create a CNAME record pointing your domain to `inkloom.dev`:
+
+    | Type | Name | Value |
+    |------|------|-------|
+    | CNAME | `docs` | `inkloom.dev` |
+  </Step>
+  <Step title="Wait for propagation">
+    DNS changes typically propagate within a few minutes. InkLoom automatically detects the record and provisions your SSL certificate. The domain status in Settings will change to **Active** once everything is verified.
+  </Step>
+</Steps>
+
+## Deployment history
+
+Every deployment is recorded in your project's deployment log, accessible from **Dashboard > project > Deployments**. Each entry shows:
+
+- **Deployment ID** — a unique identifier like `dep_7f3k9x` that you can use to reference or roll back to a specific build.
+- **Timestamp** — the exact date and time the deployment was triggered.
+- **Status** — `Success`, `Failed`, or `In progress`.
+- **Source** — whether the deployment was triggered from the dashboard, CLI, or a GitHub Action.
+
+To roll back to a previous deployment, click the deployment entry and select **Promote to Production**. The rollback deploys in the same time as a normal deployment.
+
+## Self-hosting
+
+If you prefer to run InkLoom on your own infrastructure, an open-source self-hosted version is available. It includes the core editor, sync engine, and deployment pipeline — you supply the hosting.
+
+Find the self-host setup guide, Docker Compose file, and configuration reference in the GitHub repository:
+
+[https://github.com/inkloom-io/inkloom](https://github.com/inkloom-io/inkloom)
+
+<Warning>
+  The self-hosted version does not include access to InkLoom's managed edge network or AI generation credits. You are responsible for your own CDN, SSL, and AI API costs.
+</Warning>

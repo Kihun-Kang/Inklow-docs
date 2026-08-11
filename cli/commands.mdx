@@ -1,0 +1,157 @@
+---
+title: "InkLoom CLI Commands Reference and Usage Guide"
+sidebarTitle: "Commands"
+description: "Full reference for every InkLoom CLI command: login, deploy, validate, generate, pages, status, and logout with flags and examples."
+---
+
+The InkLoom CLI exposes seven commands that cover the full documentation lifecycle: `login` and `logout` manage authentication, `deploy` publishes your docs to the edge, `validate` checks your MDX and navigation before you ship, `generate` triggers AI-powered doc creation from source code, `pages list` inspects your project's page inventory, and `status` reports on recent deployments. Each command is documented in full below.
+
+---
+
+## `inkloom login`
+
+Authenticate with your InkLoom account. Running this command opens a browser window where you complete the OAuth flow. Your credentials are stored locally and reused for all subsequent commands until you log out.
+
+```bash
+inkloom login
+```
+
+---
+
+## `inkloom logout`
+
+Remove your stored credentials from the local machine. After logging out, any command that requires authentication will prompt you to run `inkloom login` again.
+
+```bash
+inkloom logout
+```
+
+---
+
+## `inkloom deploy`
+
+Deploy your docs project to the global edge network. You must supply your project ID and at least one deployment target flag.
+
+```bash
+inkloom deploy <project-id> [--production] [--preview]
+```
+
+| Flag | Description |
+|---|---|
+| `--production` | Deploy to your live production URL. |
+| `--preview` | Create an isolated preview deployment with a unique URL. |
+
+**Example — production deployment:**
+
+```
+$ inkloom deploy proj_abc --production
+Deploying to production...
+✓ Building pages (24 pages)  0.8s
+✓ Optimizing assets          0.3s
+✓ Deploying to edge          1.1s
+✓ Deployment complete
+URL: https://docs.acme.com
+ID: dep_7f3k9x · 2.2s total
+```
+
+<Warning>
+  Deploying with `--production` immediately updates your live documentation URL. Use `--preview` to review changes before promoting them to production.
+</Warning>
+
+---
+
+## `inkloom validate`
+
+Validate your project's MDX syntax, navigation configuration, and internal links before deploying. Run this command locally or in CI to catch errors early and prevent broken deployments.
+
+```bash
+inkloom validate
+```
+
+**Example output — passing validation:**
+
+```
+$ inkloom validate
+Validating docs...
+✓ 24 pages validated
+✓ Navigation config valid
+✓ All internal links resolved
+Validation passed.
+```
+
+If any check fails, the CLI prints a list of errors with file paths and line numbers so you can fix them quickly.
+
+---
+
+## `inkloom generate`
+
+Trigger AI documentation generation for a project. InkLoom analyses your source code and produces draft MDX pages based on your codebase.
+
+```bash
+inkloom generate <project-id> [--watch]
+```
+
+| Flag | Description |
+|---|---|
+| `--watch` | Watch for source file changes and automatically regenerate affected documentation. |
+
+**Example:**
+
+```bash
+# One-off generation
+inkloom generate proj_abc
+
+# Continuous generation while developing
+inkloom generate proj_abc --watch
+```
+
+---
+
+## `inkloom pages list`
+
+List all pages that belong to a project, including their internal IDs, URL slugs, and titles. Use this command to audit your page inventory or look up page IDs for other tooling.
+
+```bash
+inkloom pages list <project-id>
+```
+
+**Example output:**
+
+```
+$ inkloom pages list proj_abc
+ID              SLUG                          TITLE
+page_abc123     introduction                  Introduction
+page_def456     quickstart                    Quickstart
+page_ghi789     guides/authentication         Authentication
+```
+
+---
+
+## `inkloom status`
+
+Show the current live status and most recent deployment details for a project.
+
+```bash
+inkloom status <project-id>
+```
+
+**Example output:**
+
+```
+$ inkloom status proj_abc
+Project: My Docs (proj_abc)
+URL:     https://docs.acme.com
+Status:  Live
+Last deployment: dep_7f3k9x · 2025-06-01T14:22:00Z
+```
+
+---
+
+<Tip>
+  For scripts and CI workflows, set both `INKLOOM_API_KEY` and `INKLOOM_PROJECT_ID` as environment variables. With `INKLOOM_PROJECT_ID` set, you can omit the `<project-id>` argument from commands like `deploy`, `generate`, `pages list`, and `status` — keeping your scripts shorter and easier to maintain.
+
+  ```bash
+  export INKLOOM_API_KEY=your_api_key_here
+  export INKLOOM_PROJECT_ID=proj_abc
+  ```
+</Tip>

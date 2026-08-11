@@ -1,47 +1,110 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with InkLoom in 5 Minutes"
+sidebarTitle: "Quickstart"
+description: "Create a project, connect your GitHub repo, generate AI-powered docs, and deploy to the edge — all in under five minutes with InkLoom."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide walks you through everything you need to go from a blank slate to live, AI-generated documentation. By the end, your docs will be deployed to a public URL and configured to update automatically every time you push code.
 
 ## Prerequisites
 
-Before you begin, you must have:
+Before you begin, make sure you have:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+- A free [InkLoom account](https://inkloom.dev/signup)
+- A GitHub repository containing the codebase you want to document
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Create a project">
+    Scaffold a new InkLoom documentation project using the CLI. Run the following command in your terminal:
 
     ```bash
-    npm install your-package
+    npx create-inkloom@latest my-docs
+    # ✓ Success! Created my-docs
     ```
+
+    This creates a `my-docs` directory containing your project configuration, a starter `docs.json` navigation file, and a sample index page. You can rename the directory to anything you like — the folder name doesn't affect your project ID or deployment URL.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Connect your GitHub repo">
+    With your project created, link it to the repository you want to document:
 
-    ```bash
-    your-cli init
-    ```
+    1. Open the [InkLoom dashboard](https://app.inkloom.dev) and select your project.
+    2. Navigate to **Settings → GitHub Integration**.
+    3. Click **Connect Repository** and authorize the InkLoom GitHub App.
+    4. Select the repository from the list and confirm.
+
+    InkLoom now has read access to your codebase and is ready to analyze it for documentation generation.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+  <Step title="Set up the GitHub Action">
+    Add the InkLoom GitHub Action to your repository so that docs stay in sync with every push. Create the following file in your repository:
+
+    ```yaml
+    # .github/workflows/inkloom.yml
+    name: Update Documentation
+    on: push
+    jobs:
+      docs:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - uses: inkloom/docs-action@v1
+            with:
+              api-key: ${{ secrets.INKLOOM_API_KEY }}
+              project-id: ${{ secrets.INKLOOM_PROJECT_ID }}
+    ```
+
+    Then add your credentials as repository secrets:
+
+    1. Go to your repository on GitHub and open **Settings → Secrets and variables → Actions**.
+    2. Add a secret named `INKLOOM_API_KEY` — copy your key from **InkLoom dashboard → Settings → API Keys**.
+    3. Add a secret named `INKLOOM_PROJECT_ID` — copy your project ID from the dashboard overview page.
+  </Step>
+  <Step title="Generate your first docs">
+    Trigger AI doc generation to create your initial set of documentation pages:
+
+    - **From the dashboard:** Select your project and click **Generate Docs**. InkLoom scans your connected repository and produces a structured set of pages within seconds.
+    - **From your terminal:** Push any commit to your repository. The GitHub Action you set up in the previous step will trigger automatically and generate docs as part of the CI run.
+
+    Once generation is complete, review the pages in the InkLoom editor. You can reorganize, edit, and enrich content using the block-based editor before publishing.
+  </Step>
+  <Step title="Deploy to the edge">
+    When you're happy with your docs, publish them to a live URL:
+
+    - **From the dashboard:** Click **Deploy** on the project overview page. InkLoom builds and pushes your docs to Cloudflare Pages across 300+ edge locations.
+    - **From the CLI:** Run the deploy command with your project ID:
 
     ```bash
-    your-cli start
+    inkloom deploy proj_abc --production
+    # Deploying to production...
+    # ✓ Building pages (24 pages)  0.8s
+    # ✓ Optimizing assets          0.3s
+    # ✓ Deploying to edge          1.1s
+    # ✓ Deployment complete
+    # URL: https://docs.acme.com
     ```
+
+    Your docs are now live. Free accounts publish to a `*.inkloom.dev` subdomain. Pro and above support custom domains with automatic SSL.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+<Note>
+  Once the GitHub Action is in place, you don't need to trigger deployments manually. Every push to your repository automatically re-analyzes your codebase, updates the affected documentation pages, and deploys the changes to production.
+</Note>
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+## Next steps
+
+<CardGroup cols={2}>
+  <Card
+    title="How It Works"
+    icon="bolt"
+    href="/how-it-works"
+  >
+    Dive deeper into the automated doc lifecycle and understand how InkLoom keeps your docs evergreen.
+  </Card>
+  <Card
+    title="GitHub Sync"
+    icon="github"
+    href="/features/github-sync"
+  >
+    Explore bidirectional sync, branch previews, and how doc changes integrate with your pull request workflow.
+  </Card>
+</CardGroup>

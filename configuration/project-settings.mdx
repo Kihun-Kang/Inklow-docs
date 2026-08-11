@@ -1,0 +1,77 @@
+---
+title: "Configure Project Settings in InkLoom Dashboard"
+sidebarTitle: "Project Settings"
+description: "Manage your InkLoom project name, slug, visibility, environment variables, and deletion options from the project Settings panel."
+---
+
+Every InkLoom project has a set of core settings that control how your documentation is identified, accessed, and managed. You can find all of these options by navigating to your project in the dashboard and clicking the **Settings** tab.
+
+## General Settings
+
+The general settings panel lets you update the basic identity of your project.
+
+- **Project name** — The human-readable name displayed in the dashboard and at the top of your docs site. You can change this at any time without affecting your URL.
+- **Slug** — A URL-safe identifier that determines your subdomain. For example, a slug of `my-project` results in the URL `my-project.inkloom.dev`. Changing the slug immediately updates your subdomain, so any existing links to the old URL will break.
+- **Description** — A short summary of your project. This appears in dashboard listings and is used as the default meta description for your docs site's homepage.
+
+<Warning>
+  Changing your project slug changes your public URL. If you have shared links, embedded iframes, or search engine indexed pages pointing to the old subdomain, they will no longer resolve. Update any external references before making this change.
+</Warning>
+
+## Visibility
+
+Project visibility controls who can read your published documentation.
+
+- **Public** — Anyone on the internet can view your docs without signing in. This is the default for all new projects and the right choice for open-source libraries, public APIs, and product help centers.
+- **Private** — Only authenticated users you have explicitly invited can access the docs site. This option requires the **Ultimate plan** or higher.
+
+<Steps>
+  <Step title="Open project settings">
+    Navigate to your project in the dashboard and click **Settings**.
+  </Step>
+  <Step title="Locate the Visibility section">
+    Scroll to the **Visibility** card under the General tab.
+  </Step>
+  <Step title="Select your visibility level">
+    Choose **Public** or **Private** from the dropdown, then click **Save changes**.
+  </Step>
+</Steps>
+
+<Warning>
+  Changing visibility from public to private takes effect immediately. Visitors currently viewing your docs will be redirected to a login prompt as soon as the setting is saved.
+</Warning>
+
+<Note>
+  Private docs require the **Ultimate plan**. If you are on a lower tier, the Private option will be disabled. Upgrade in **Settings → Billing** to unlock it.
+</Note>
+
+## Deleting a Project
+
+Deleting a project permanently removes all of its pages, settings, deployment history, and associated assets. This action cannot be undone and is only available to the project **Owner**.
+
+<Warning>
+  Project deletion is irreversible. Export or back up any content you want to keep before proceeding. Deleted projects cannot be restored by the InkLoom support team.
+</Warning>
+
+<Steps>
+  <Step title="Go to the Danger Zone">
+    In **Settings**, scroll to the bottom of the General tab to find the **Danger Zone** section.
+  </Step>
+  <Step title="Click Delete Project">
+    Click the **Delete Project** button. You will be prompted to type your project slug to confirm.
+  </Step>
+  <Step title="Confirm deletion">
+    Type the slug exactly as shown and click **Confirm delete**. The project and all its data will be removed immediately.
+  </Step>
+</Steps>
+
+## Environment Variables
+
+InkLoom uses API keys and project IDs to authenticate requests from the GitHub Action and other integrations. You can find these credentials in **Settings → API Keys**.
+
+- **API Key** (`INKLOOM_API_KEY`) — A secret token used to authenticate your CI/CD pipeline with InkLoom. Treat this like a password and never commit it to source control. Store it as a repository secret in GitHub.
+- **Project ID** (`INKLOOM_PROJECT_ID`) — A unique identifier for your project. This is not sensitive, but it must be included alongside the API key in every integration call.
+
+<Tip>
+  If you suspect your API key has been compromised, rotate it immediately from **Settings → API Keys** by clicking **Regenerate**. Your old key is invalidated the moment you regenerate.
+</Tip>

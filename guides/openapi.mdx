@@ -1,0 +1,93 @@
+---
+title: "Generate API Reference Pages from an OpenAPI Spec"
+sidebarTitle: "OpenAPI Setup"
+description: "Upload a YAML or JSON OpenAPI spec to InkLoom and instantly generate interactive, always-current API reference documentation."
+---
+
+InkLoom can turn your OpenAPI specification into a fully interactive API reference in seconds. Provide a YAML or JSON file — or point InkLoom to a hosted spec URL — and it automatically creates a structured reference page for every endpoint group in your API, complete with request parameters, response schemas, and a live try-it console.
+
+<Note>
+  InkLoom supports OpenAPI versions **3.0** and **3.1**. Swagger 2.0 specs are not currently supported. If you are on Swagger 2.0, convert your spec using the [Swagger Converter](https://converter.swagger.io/) before importing.
+</Note>
+
+## Upload your OpenAPI spec
+
+<Steps>
+  <Step title="Open the API Reference tab">
+    Go to the [InkLoom dashboard](https://app.inkloom.dev), select your project from the project list, then click the **API Reference** tab in the top navigation.
+  </Step>
+  <Step title="Add your spec">
+    Click **Upload Spec**. You have two options:
+
+    - **Upload a file** — click **Choose File** and select a `.yaml`, `.yml`, or `.json` file from your machine.
+    - **Enter a URL** — paste the public URL of your hosted spec (for example, `https://api.yourcompany.com/openapi.yaml`) into the URL field and click **Fetch**.
+  </Step>
+  <Step title="Review the generated pages">
+    InkLoom parses your spec and creates one reference page per endpoint group (tag). You will see a preview of the page structure in the sidebar. Confirm the groupings look correct, then click **Save**.
+  </Step>
+</Steps>
+
+## Example OpenAPI spec
+
+Below is a minimal OpenAPI 3.1 spec defining a single `GET /users` endpoint. Use this as a reference for the required structure InkLoom expects.
+
+```yaml title="openapi.yaml"
+openapi: 3.1.0
+info:
+  title: Acme API
+  version: 1.0.0
+  description: The Acme REST API.
+servers:
+  - url: https://api.acme.com/v1
+paths:
+  /users:
+    get:
+      summary: List all users
+      operationId: listUsers
+      tags:
+        - Users
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of users to return.
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    email:
+                      type: string
+        "401":
+          description: Unauthorized.
+```
+
+## Auto-refresh from URL
+
+If you provided a hosted spec URL instead of uploading a file, InkLoom re-fetches the spec on every deploy and regenerates the affected reference pages automatically. This means your API documentation is always in sync with your latest spec — no manual re-uploads needed.
+
+<Tip>
+  Host your spec at a stable URL (for example, served directly from your API server or a CDN) and use the URL option in InkLoom. Pair it with the [InkLoom GitHub Action](/guides/writing-docs#mdx-on-github) to trigger a redeploy every time you push changes to your API codebase.
+</Tip>
+
+## Customizing the generated pages
+
+InkLoom generates reference pages from your spec, but you are not locked into the defaults. You can customize any generated page in two ways:
+
+**Using the block editor:** Open the generated page in the InkLoom dashboard and click **Edit**. Add introductory paragraphs, usage examples, code snippets, or callouts directly above or below the auto-generated endpoint documentation.
+
+**Using MDX files:** If your project is connected to GitHub, InkLoom writes the generated pages as `.mdx` files in your repository. You can edit these files directly — add frontmatter overrides, prepend narrative content, or insert InkLoom components anywhere in the page.
+
+<Warning>
+  Avoid editing the auto-generated parameter tables and schema blocks directly in MDX. These sections are regenerated on every spec update and your changes will be overwritten. Place your custom content above or below the generated sections instead.
+</Warning>

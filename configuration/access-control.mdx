@@ -1,0 +1,92 @@
+---
+title: "Manage Access Control and Roles in InkLoom"
+sidebarTitle: "Access Control"
+description: "Configure member roles, authenticated docs access, SSO/SAML, and audit logs to secure your InkLoom documentation for your team and readers."
+---
+
+InkLoom gives you fine-grained control over who can edit your documentation and who can read it. Role-based permissions govern your team's capabilities inside the dashboard, while authenticated access and SSO settings control how external readers interact with your published docs site.
+
+## Member Roles
+
+Every member of an InkLoom project is assigned one of three roles. Roles are set at the project level, so a person can hold different roles on different projects within the same organization.
+
+| Role | What they can do |
+|---|---|
+| **Owner** | Full access: manage settings, billing, and integrations; invite and remove members; delete the project; publish and unpublish. There can only be one Owner per project. |
+| **Editor** | Create, edit, and publish pages; manage navigation; view deployment history. Editors cannot change billing, transfer ownership, or delete the project. |
+| **Viewer** | Read-only access to the dashboard and the docs site (when private). Viewers cannot make or publish changes. |
+
+To invite a team member, go to **Settings → Members**, click **Invite member**, enter their email address, and select a role. The invitee receives an email with a link to accept the invitation.
+
+<Tip>
+  Assign the Viewer role to stakeholders — such as legal reviewers or executives — who need to read draft content in the dashboard without the risk of accidental edits.
+</Tip>
+
+## Authenticated Docs
+
+<Note>
+  Authenticated docs require the **Ultimate plan** ($159/month, billed annually). Upgrade in **Settings → Billing** to enable this feature.
+</Note>
+
+By default, your published docs site is publicly accessible to anyone with the URL. With authenticated access enabled, only users who are logged in to InkLoom and have been explicitly invited to your project as Viewers (or higher) can view the docs site.
+
+<Steps>
+  <Step title="Open Security settings">
+    Navigate to **Settings → Security** in your project dashboard.
+  </Step>
+  <Step title="Enable Authentication">
+    Toggle **Require authentication to view docs** to the on position and click **Save changes**.
+  </Step>
+  <Step title="Invite your readers">
+    Go to **Settings → Members** and invite each person who should have read access, assigning them the **Viewer** role.
+  </Step>
+</Steps>
+
+<Warning>
+  Enabling authenticated access takes effect immediately. Anyone currently viewing your docs who is not logged in will be redirected to a login prompt right away.
+</Warning>
+
+## SSO / SAML
+
+<Note>
+  SSO and SAML integration are available on the **Enterprise plan** only. Contact [sales@inkloom.io](mailto:sales@inkloom.io) to discuss Enterprise pricing.
+</Note>
+
+Single Sign-On lets your team members authenticate to InkLoom using your existing identity provider (IdP), eliminating the need for separate InkLoom passwords. InkLoom supports any SAML 2.0-compliant provider, including Okta, Azure Active Directory, and Google Workspace.
+
+<Steps>
+  <Step title="Open SSO settings">
+    Go to **Settings → Security → SSO**.
+  </Step>
+  <Step title="Enter your IdP metadata">
+    Paste your IdP's SAML metadata URL or upload the XML metadata file provided by your identity provider.
+  </Step>
+  <Step title="Copy the InkLoom service provider details">
+    InkLoom displays an **ACS URL** and an **Entity ID**. Enter these values in your IdP's application settings for InkLoom.
+  </Step>
+  <Step title="Test the connection">
+    Click **Test SSO** to verify the handshake between InkLoom and your IdP. InkLoom shows a success or error message along with diagnostic details.
+  </Step>
+  <Step title="Enable SSO">
+    Once the test passes, toggle **Enforce SSO** to on and click **Save**. Team members will now be redirected to your IdP when they sign in to InkLoom.
+  </Step>
+</Steps>
+
+## Audit Logs
+
+<Note>
+  Audit logs are available on the **Enterprise plan** only.
+</Note>
+
+Audit logs give your security and compliance teams a tamper-evident record of activity across your InkLoom project. Every significant event — including page views, edits, publishes, member invitations, and setting changes — is recorded with a timestamp and the identity of the user who performed the action.
+
+To access audit logs, go to **Settings → Security → Audit Logs**. You can filter logs by date range, event type, or user. Logs can be exported as a CSV file for ingestion into your SIEM or compliance tooling.
+
+<CardGroup cols={2}>
+  <Card title="Events tracked" icon="list-check">
+    Page viewed, page created, page edited, page published, page deleted, member invited, member removed, role changed, SSO configured, API key regenerated, project deleted.
+  </Card>
+  <Card title="Retention period" icon="clock">
+    Audit logs are retained for 12 months on the Enterprise plan. Contact your account manager if you require a longer retention window.
+  </Card>
+</CardGroup>

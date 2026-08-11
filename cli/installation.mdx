@@ -1,0 +1,86 @@
+---
+title: "Install and Set Up the InkLoom CLI Tool"
+sidebarTitle: "Installation"
+description: "Install the InkLoom CLI, authenticate your account, and scaffold your first docs project in under five minutes."
+---
+
+The InkLoom CLI lets you manage your documentation projects directly from the terminal — deploy to the edge, validate MDX, trigger AI generation, and more. You can install it globally via a package manager or run it on demand with `npx`. The CLI requires a Pro plan or above to access the API.
+
+<Note>
+  The InkLoom CLI requires **Node.js 18 or above**. Run `node --version` to confirm your version before installing.
+</Note>
+
+## Install the CLI
+
+Choose your preferred package manager to install the CLI globally on your machine.
+
+<CodeGroup>
+
+```bash npm
+npm install -g @inkloom/cli
+```
+
+```bash yarn
+yarn global add @inkloom/cli
+```
+
+```bash pnpm
+pnpm add -g @inkloom/cli
+```
+
+</CodeGroup>
+
+## Verify Installation
+
+After installation, confirm the CLI is available by checking its version.
+
+```bash
+inkloom --version
+# inkloom/1.0.0
+```
+
+If the command is not found, ensure your package manager's global binary directory is on your `PATH`.
+
+## Authenticate
+
+Before you can deploy or manage projects, you need to authenticate with your InkLoom account. Run the login command to open a browser window and complete the OAuth flow — your credentials are stored locally once you approve access.
+
+```bash
+inkloom login
+```
+
+After approving access in the browser, you'll see a confirmation in your terminal and the CLI will be ready to use.
+
+<Tip>
+  In CI pipelines, skip `inkloom login` entirely by setting the `INKLOOM_API_KEY` environment variable. The CLI automatically picks it up so your build runners never need interactive authentication.
+
+  ```bash
+  export INKLOOM_API_KEY=your_api_key_here
+  ```
+</Tip>
+
+## Scaffold a New Project
+
+To start a brand-new InkLoom docs project, use the `create-inkloom` initializer. Replace `my-docs` with your desired project folder name.
+
+```bash
+npx create-inkloom@latest my-docs
+```
+
+The scaffolder creates the project structure and prints next steps:
+
+```
+✓ Success! Created my-docs
+
+Next steps:
+  cd my-docs
+  inkloom login
+  inkloom deploy proj_abc --production
+```
+
+The generated project includes:
+
+- **`docs.json`** — your project configuration file, where you define navigation, theming, and project metadata.
+- **`pages/`** — a sample pages directory containing starter MDX files to build on.
+
+Once the project is scaffolded, `cd` into the folder and follow the printed next steps to deploy.
